@@ -48,4 +48,4 @@
   - Las dudas van por el grupo de WhatsApp.
   - El video de IBM sale de los niveles opcionales.
   - Ajustes en celular: terminal, sello, novedades y rombos de las semanas. Se agregó un favicon.
-- **Pendiente de Nicolás:** la fecha límite para marcar el When2meet y dejar la pregunta, y cuánto tiempo semanal va a pedir el proyecto.
+- **Fechas límite (las aprobó Nicolás):** el When2meet hasta el lunes 2 de noviembre a las 8 p. m. y la pregunta antes de la reunión. La dedicación semanal no se pone, porque el grupo ya se comprometió.

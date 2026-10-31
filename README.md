@@ -26,7 +26,7 @@ Eso es todo. La ruta de aprendizaje opcional, por nivel, está en la [página de
 
 ## Estado
 
-Arrancando. El alcance de la primera versión, las herramientas y cómo nos repartimos el trabajo se definen en la reunión de arranque (entre el 3 y el 6 de noviembre). Marca tu disponibilidad en el [When2meet](https://www.when2meet.com/?39606729-rn6Ir). La idea es que todos pasemos por todas las partes del RAG para aprenderlo completo.
+Arrancando. El alcance de la primera versión, las herramientas y cómo nos repartimos el trabajo se definen en la reunión de arranque (entre el 3 y el 6 de noviembre). Marca tu disponibilidad en el [When2meet](https://www.when2meet.com/?39606729-rn6Ir) hasta el lunes 2 de noviembre a las 8 p. m. La idea es que todos pasemos por todas las partes del RAG para aprenderlo completo.
 
 ## Equipo
 
