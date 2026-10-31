@@ -530,11 +530,6 @@ footer p+p{margin-top:var(--e2)}
     <div class="escena-final" aria-hidden="true">
       <div class="halo"></div>
       <canvas id="luna-vectores" class="luna-vectores"></canvas>
-      <svg class="mira" viewBox="0 0 200 200" style="pointer-events:none">
-        <circle cx="100" cy="100" r="96" fill="none" stroke="#5ce1e6" stroke-width=".6" stroke-dasharray="2 6"/>
-        <g stroke="#ff2d55" stroke-width="1.5"><path d="M100 0v14M100 186v14M0 100h14M186 100h14"/></g>
-        <path d="M30 30h14M30 30v14M170 30h-14M170 30v14M30 170h14M30 170v-14M170 170h-14M170 170v-14" stroke="#f5e829" stroke-width="1.2" fill="none"/>
-      </svg>
       <svg class="horizonte" viewBox="0 0 1440 220" preserveAspectRatio="xMidYMax slice">
         <path d="M0 150 L80 150 L80 120 L140 120 L140 150 L230 150 L230 95 L250 95 L250 80 L270 80 L270 95 L300 95 L300 150 L420 150 L420 130 L480 130 L480 150 L560 150 L560 158 L880 158 L880 150 L960 150 L960 105 L1000 105 L1000 70 L1012 70 L1012 105 L1050 105 L1050 150 L1150 150 L1150 125 L1230 125 L1230 150 L1320 150 L1320 110 L1380 110 L1380 150 L1440 150 L1440 220 L0 220Z" fill="#05030f"/>
         <rect x="0" y="156" width="1440" height="2" fill="#ff2d55" opacity=".7"/>
@@ -769,7 +764,7 @@ footer p+p{margin-top:var(--e2)}
   (function(){
     var cv=document.getElementById('luna-vectores'); if(!cv||!cv.getContext) return;
     var ctx=cv.getContext('2d'), W,H,dpr, P=[], cx,cy,R, mx=-999,my=-999, armar=false, t0=0, sem=5;
-    var consulta=null, proxima=0;
+    var consultas=[], proxima=0;
     var GLIFOS=['§','¶','Art.','Par.','Ac.','N°','CSU','{ }'];
     function az(){ sem=(sem*9301+49297)%233280; return sem/233280; }
     // cráteres como direcciones sobre la esfera: [x,y,z,radio angular (coseno)]
@@ -791,16 +786,19 @@ footer p+p{margin-top:var(--e2)}
                  g: az()<.09? GLIFOS[Math.floor(az()*GLIFOS.length)] : null, brillo:0, sx:0, sy:0, vis:0});
       }
     }
-    function lanzarConsulta(t){
-      // elegir un punto de la cara visible como destino de la consulta
-      var cand=P.filter(function(p){ return p.vis>.75; }); if(!cand.length) return;
-      var d=cand[Math.floor(Math.random()*cand.length)];
-      var vecinos=P.filter(function(p){ return p!==d && p.ux*d.ux+p.uy*d.uy+p.uz*d.uz>.988; }).slice(0,14);
-      consulta={d:d, v:vecinos, t:t};
+    function lanzarConsulta(t,px,py){
+      var cand=P.filter(function(p){ return p.vis>.7; }); if(!cand.length) return;
+      var d;
+      if(px!=null){ var mejor=1e9; cand.forEach(function(p){ var dd=(p.x-px)*(p.x-px)+(p.y-py)*(p.y-py); if(dd<mejor){mejor=dd;d=p;} }); }
+      else d=cand[Math.floor(Math.random()*cand.length)];
+      var vec=P.map(function(p){ return {p:p, sim:p.ux*d.ux+p.uy*d.uy+p.uz*d.uz}; })
+               .filter(function(o){ return o.p!==d; }).sort(function(a,b){ return b.sim-a.sim; }).slice(0,20);
+      var ang=(Math.random()-.5)*1.1;
+      consultas.push({d:d, v:vec.map(function(o){return o.p;}), sim:vec[vec.length-1].sim, t:t, ox:cx+Math.sin(ang)*W*.45, oy:H+10});
     }
     function cuadro(t){
       ctx.clearRect(0,0,W,H);
-      var k=armar? Math.min((t-t0)/2200,1) : 0, e=1-Math.pow(1-k,3);
+      var k=armar? Math.min((t-t0)/1500,1) : 0, e=1-Math.pow(1-k,3);
       var th=t*.00011, ct=Math.cos(th), st=Math.sin(th);
       ctx.globalCompositeOperation='lighter';
       ctx.font='600 10px "Chakra Petch", monospace';
@@ -827,27 +825,34 @@ footer p+p{margin-top:var(--e2)}
           ctx.beginPath(); ctx.arc(p.x,p.y,p.s*esc*(1+b*1.6),0,6.283); ctx.fill();
         }
       }
-      // consulta: rayo desde abajo hasta el punto, y conexiones con los vecinos
-      if(armar && e>=1 && !quieto){
-        if(!consulta && t>proxima) lanzarConsulta(t);
-        if(consulta){
-          var dt=t-consulta.t, d=consulta.d, ox=cx, oy=H+10;
-          var ida=Math.min(dt/450,1), px=ox+(d.x-ox)*ida, py=oy+(d.y-oy)*ida;
-          var vida= dt<1400? 1 : Math.max(0,1-(dt-1400)/700);
-          ctx.strokeStyle='rgba(92,225,230,'+(.8*vida)+')'; ctx.lineWidth=1.6;
-          ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(px,py); ctx.stroke();
-          if(ida>=1){
-            consulta.v.forEach(function(v){ v.brillo=Math.max(v.brillo,.9*vida); });
-            d.brillo=1*vida;
-            ctx.strokeStyle='rgba(245,232,41,'+(.45*vida)+')'; ctx.lineWidth=.8; ctx.beginPath();
-            consulta.v.forEach(function(v){ ctx.moveTo(d.x,d.y); ctx.lineTo(v.x,v.y); }); ctx.stroke();
-            ctx.globalCompositeOperation='source-over';
-            ctx.fillStyle='rgba(245,232,41,'+vida+')'; ctx.font='700 11px "Chakra Petch", sans-serif';
-            ctx.fillText('top-k = '+consulta.v.length, d.x+12, d.y-10);
-            ctx.globalCompositeOperation='lighter';
-          }
-          if(dt>2100){ consulta=null; proxima=t+1600; }
-        }
+      // consultas: rayo hasta el punto, impacto, top-k encendido y mira que se engancha
+      if(armar && e>=1){
+        if(!quieto && t>proxima && consultas.length<3){ lanzarConsulta(t); proxima=t+650+Math.random()*500; }
+        consultas=consultas.filter(function(c){ return t-c.t<1900; });
+        consultas.forEach(function(c){
+          var dt=t-c.t, d=c.d, ida=Math.min(dt/220,1), vida=dt<1300?1:Math.max(0,1-(dt-1300)/600);
+          var px=c.ox+(d.x-c.ox)*ida, py=c.oy+(d.y-c.oy)*ida;
+          ctx.strokeStyle='rgba(92,225,230,'+(.9*vida)+')'; ctx.lineWidth=2.2;
+          ctx.beginPath(); ctx.moveTo(c.ox,c.oy); ctx.lineTo(px,py); ctx.stroke();
+          if(ida<1) return;
+          // impacto
+          var ir=Math.min((dt-220)/300,1);
+          if(ir<1){ ctx.strokeStyle='rgba(245,232,41,'+(1-ir)+')'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(d.x,d.y,6+ir*34,0,6.283); ctx.stroke(); }
+          c.v.forEach(function(v){ v.brillo=Math.max(v.brillo,vida); }); d.brillo=Math.max(d.brillo,vida*1.2);
+          ctx.strokeStyle='rgba(245,232,41,'+(.6*vida)+')'; ctx.lineWidth=1; ctx.beginPath();
+          c.v.forEach(function(v){ ctx.moveTo(d.x,d.y); ctx.lineTo(v.x,v.y); }); ctx.stroke();
+          // mira: caja con esquinas alrededor del grupo
+          var x0=d.x,x1=d.x,y0=d.y,y1=d.y; c.v.forEach(function(v){ x0=Math.min(x0,v.x);x1=Math.max(x1,v.x);y0=Math.min(y0,v.y);y1=Math.max(y1,v.y); });
+          var pad=10+ (1-Math.min((dt-220)/250,1))*30; x0-=pad;x1+=pad;y0-=pad;y1+=pad; var q=9;
+          ctx.globalCompositeOperation='source-over';
+          ctx.strokeStyle='rgba(255,45,85,'+vida+')'; ctx.lineWidth=2; ctx.beginPath();
+          ctx.moveTo(x0,y0+q);ctx.lineTo(x0,y0);ctx.lineTo(x0+q,y0); ctx.moveTo(x1-q,y0);ctx.lineTo(x1,y0);ctx.lineTo(x1,y0+q);
+          ctx.moveTo(x0,y1-q);ctx.lineTo(x0,y1);ctx.lineTo(x0+q,y1); ctx.moveTo(x1-q,y1);ctx.lineTo(x1,y1);ctx.lineTo(x1,y1-q); ctx.stroke();
+          ctx.fillStyle='rgba(5,3,15,'+(.8*vida)+')'; var txt='top-k = '+c.v.length+'  ·  sim ≥ '+c.sim.toFixed(3);
+          ctx.font='700 11px "Chakra Petch", sans-serif'; var tw=ctx.measureText(txt).width;
+          ctx.fillRect(x0,y0-20,tw+12,16); ctx.fillStyle='rgba(245,232,41,'+vida+')'; ctx.fillText(txt,x0+6,y0-8);
+          ctx.globalCompositeOperation='lighter';
+        });
       }
       ctx.globalCompositeOperation='source-over';
     }
@@ -856,9 +861,11 @@ footer p+p{margin-top:var(--e2)}
     if(quieto){ armar=true; t0=-1e9; cuadro(0); P.forEach(function(p){p.x=p.sx;p.y=p.sy;}); cuadro(0); return; }
     cv.addEventListener('mousemove',function(ev){ var b=cv.getBoundingClientRect(); mx=ev.clientX-b.left; my=ev.clientY-b.top; });
     cv.addEventListener('mouseleave',function(){ mx=my=-999; });
+    cv.addEventListener('click',function(ev){ if(!armar) return; var b=cv.getBoundingClientRect(); lanzarConsulta(performance.now(),ev.clientX-b.left,ev.clientY-b.top); });
+    cv.style.cursor='crosshair';
     cv.addEventListener('touchmove',function(ev){ var b=cv.getBoundingClientRect(), tt=ev.touches[0]; mx=tt.clientX-b.left; my=tt.clientY-b.top; },{passive:true});
     cv.addEventListener('touchend',function(){ mx=my=-999; });
-    new IntersectionObserver(function(es){ if(es[0].isIntersecting && !armar){ armar=true; t0=performance.now(); proxima=t0+2800; } },{threshold:.35}).observe(cv);
+    new IntersectionObserver(function(es){ if(es[0].isIntersecting && !armar){ armar=true; t0=performance.now(); proxima=t0+2300; } },{threshold:.35}).observe(cv);
     var rt; addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(construir,150); });
     requestAnimationFrame(bucle);
   })();
