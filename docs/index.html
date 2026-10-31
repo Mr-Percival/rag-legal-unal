@@ -175,6 +175,14 @@ p+p{margin-top:var(--e3)}
 .versus .no q{text-decoration:line-through;text-decoration-color:var(--rojo);text-decoration-thickness:2px}
 .versus small{display:block;margin-top:var(--e2);font-size:var(--t-sm);line-height:1.35}
 .versus .si small{color:var(--luna-tenue)}
+.ej-issue{display:grid;gap:2px;margin-top:var(--e3);padding:var(--e3);background:#fff;color:#1f2328;border:1px solid #d0d7de;border-radius:6px;font-family:-apple-system,"Segoe UI",sans-serif;font-size:var(--t-sm);max-width:440px;box-shadow:4px 4px 0 var(--tinta)}
+.ej-tit{font-weight:700;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:#59636e;margin-bottom:var(--e1)}
+.ej-campo{font-weight:600;margin-top:var(--e2)}
+.ej-campo i{font-weight:400;color:#59636e}
+.ej-valor{border:1px solid #d0d7de;border-radius:6px;padding:6px 8px;background:#f6f8fa}
+.ej-valor:nth-of-type(2){border-color:#0969da;box-shadow:0 0 0 2px rgba(9,105,218,.25);background:#fff}
+.tenue-ej{color:#59636e}
+.ej-pie{margin-top:var(--e2);font-size:.75rem;color:#1a7f37;font-weight:600}
 .nota-cuenta{margin-top:var(--e3);font-size:var(--t-sm);line-height:1.45}
 @media(max-width:600px){.tarea li{padding-left:2.4rem}.tarea li::before{font-size:2rem}}
 .tarea .por-que{margin-top:var(--e5);max-width:60ch}
@@ -386,6 +394,16 @@ footer p+p{margin-top:var(--e2)}
               <div class="si"><b>Sirve</b><q>¿Cuántas veces puedo cancelar una asignatura?</q><small>Es concreta y la respuesta está en una norma.</small></div>
               <div class="no"><b>No sirve</b><q>¿Qué es el estatuto?</q><small>Es muy general; no hay un artículo que la responda.</small></div>
             </div>
+            <div class="ej-issue" aria-label="Ejemplo de cómo llenar el formulario en GitHub">
+              <span class="ej-tit">Así se ve en GitHub</span>
+              <span class="ej-campo">Título</span>
+              <span class="ej-valor">¿Cuántas veces puedo cancelar una asignatura?</span>
+              <span class="ej-campo">¿En qué situación te surgió? <i>(opcional)</i></span>
+              <span class="ej-valor tenue-ej">Quería cancelar Cálculo y no sabía si me afectaba el promedio.</span>
+              <span class="ej-campo">Tema <i>(opcional)</i></span>
+              <span class="ej-valor tenue-ej">Matrícula y cancelaciones</span>
+              <span class="ej-pie">Luego, el botón verde para crearla</span>
+            </div>
             <p class="nota-cuenta">¿Sin cuenta de GitHub? Es gratis y toma 5 minutos: <a href="https://github.com/signup" target="_blank" rel="noopener">crear cuenta</a> · <a href="https://www.youtube.com/results?search_query=c%C3%B3mo+crear+una+cuenta+de+GitHub+paso+a+paso" target="_blank" rel="noopener">video paso a paso</a>. Escojan un usuario que les guste mostrar: ese perfil termina siendo su portafolio.</p></li>
         </ol>
         <p class="por-que">Eso es todo. Con esas preguntas armamos el conjunto de prueba: cuando el RAG empiece a responder, las usamos para medir si acierta.</p>
@@ -522,7 +540,7 @@ footer p+p{margin-top:var(--e2)}
         <rect x="0" y="156" width="1440" height="2" fill="#ff2d55" opacity=".7"/>
       </svg>
     </div>
-    <p class="frase"><span>Nos vemos en la reunión</span></p>
+    <p class="frase"><span>Lo construimos entre todos</span></p>
   </div>
 </main>
 

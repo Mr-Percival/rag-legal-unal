@@ -1,15 +1,17 @@
 name: Pregunta sobre la normativa
 description: Una pregunta real que te gustaría que el RAG respondiera. Con estas preguntas armamos el conjunto de prueba.
-title: "Pregunta: "
+title: "¿...?"
 labels: ["pregunta"]
 body:
-  - type: textarea
-    id: pregunta
+  - type: markdown
     attributes:
-      label: Tu pregunta
-      description: Escríbela como se la harías a alguien de la Secretaría. Buena: «¿Cuántas veces puedo cancelar una asignatura?». No sirve: «¿Qué es el estatuto?».
-    validations:
-      required: true
+      value: |
+        **Escribe tu pregunta en el título**, como se la harías a alguien de la Secretaría. Ejemplo: «¿Cuántas veces puedo cancelar una asignatura?». Lo de abajo es opcional.
+  - type: textarea
+    id: contexto
+    attributes:
+      label: ¿En qué situación te surgió? (opcional)
+      description: Por ejemplo, «quería cancelar Cálculo y no sabía si me afectaba el promedio».
   - type: textarea
     id: respuesta
     attributes:
@@ -18,7 +20,7 @@ body:
   - type: dropdown
     id: tema
     attributes:
-      label: Tema
+      label: Tema (opcional)
       options:
         - Matrícula y cancelaciones
         - Notas, promedio y pérdida de calidad de estudiante
