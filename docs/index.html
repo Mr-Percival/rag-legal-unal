@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAG Legal UNAL · AtarraIA</title>
+<meta name="description" content="Semillero AtarraIA: vamos a construir un sistema que responde sobre la normativa de la UNAL citando la norma exacta. Tarea de arranque: 1 video de 6 minutos y 1 pregunta.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RAG Legal UNAL · Semillero AtarraIA">
+<meta property="og:description" content="Vamos a construir un sistema que responde sobre la normativa de la UNAL citando la norma exacta. Tarea de arranque: 1 video de 6 minutos y 1 pregunta.">
+<meta property="og:url" content="https://mr-percival.github.io/rag-legal-unal/">
+<meta property="og:image" content="https://mr-percival.github.io/rag-legal-unal/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,700;1,700&family=Barlow:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   Lenguaje visual inspirado en Cyberpunk: Edgerunners
+   (sin assets de la serie): la luna como meta, colores planos
+   con sombra dura estilo Trigger, cortes diagonales, líneas de
+   velocidad, aberración cromática y rastro "sandevistan".
+   ========================================================= */
+:root{
+  --noche:#0d0920; --noche-2:#171033; --noche-3:#2c2160; --tinta:#05030f;
+  --luna:#efeaf7; --luna-tenue:#b7aed3;
+  --amarillo:#f5e829; --cian:#5ce1e6; --rosa:#ff4fb8; --rojo:#ff2d55; --violeta:#a98bff;
+
+  --display:"Chakra Petch","Bahnschrift",sans-serif;
+  --texto:"Barlow","Segoe UI",sans-serif;
+
+  --e1:4px;--e2:8px;--e3:12px;--e4:16px;--e5:24px;--e6:32px;--e7:48px;--e8:64px;--e9:96px;
+  --t-sm:.875rem;--t-base:1.0625rem;--t-md:1.25rem;--t-lg:2rem;--t-xl:3.25rem;
+  --corte:14px;
+  --sombra-dura:6px 6px 0 var(--tinta);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:100%;scroll-behavior:smooth;overflow-x:clip}
+body{background:var(--noche);color:var(--luna);font-family:var(--texto);font-size:var(--t-base);line-height:1.5;overflow-x:clip}
+a{color:var(--cian)}
+a:focus-visible{outline:3px solid var(--amarillo);outline-offset:3px}
+.envoltura{max-width:1120px;margin:0 auto;padding:0 var(--e4)}
+@media(min-width:720px){.envoltura{padding:0 var(--e6)}}
+
+/* ---------- Capas globales ---------- */
+#lluvia{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.5}
+#rastro{position:fixed;inset:0;width:100%;height:100%;z-index:50;pointer-events:none}
+.grano{position:fixed;inset:0;z-index:40;pointer-events:none;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ---------- Portada: la luna ---------- */
+.cielo{position:relative;min-height:100svh;overflow:hidden;isolation:isolate;
+  background:radial-gradient(120% 80% at 70% 20%,#2a1a5e 0%,#160d38 40%,var(--noche) 75%)}
+.velocidad{position:absolute;inset:-20%;z-index:-4;opacity:.35;
+  background:repeating-conic-gradient(from 0deg at 72% 30%,rgba(92,225,230,.18) 0deg .6deg,transparent .6deg 6deg);
+  -webkit-mask:radial-gradient(circle at 72% 30%,transparent 0 22%,#000 60%);mask:radial-gradient(circle at 72% 30%,transparent 0 22%,#000 60%);
+  animation:girar 120s linear infinite}
+@keyframes girar{to{transform:rotate(360deg)}}
+.luna{position:absolute;z-index:-3;left:50%;top:6svh;width:min(118vw,560px);aspect-ratio:1;transform:translateX(-35%);border-radius:50%;
+  background:radial-gradient(circle at 40% 38%,#fffdf4 0%,#f3ecff 35%,#dcd0f5 62%,#b3a6de 100%);
+  box-shadow:0 0 0 2px rgba(255,255,255,.4),0 0 90px 20px rgba(239,234,247,.35),0 0 260px 90px rgba(92,225,230,.18)}
+.luna::before{content:"";position:absolute;inset:0;border-radius:50%;opacity:.35;
+  background-image:radial-gradient(rgba(90,70,150,.55) 1.2px,transparent 1.6px);background-size:7px 7px;
+  -webkit-mask:linear-gradient(115deg,transparent 30%,#000 85%);mask:linear-gradient(115deg,transparent 30%,#000 85%)}
+.luna::after{content:"";position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 63% 58%,rgba(110,90,170,.28) 0 8%,transparent 8.5%),
+             radial-gradient(circle at 30% 66%,rgba(110,90,170,.2) 0 5%,transparent 5.5%),
+             radial-gradient(circle at 54% 24%,rgba(110,90,170,.18) 0 4%,transparent 4.5%),
+             radial-gradient(circle at 78% 36%,rgba(110,90,170,.15) 0 3%,transparent 3.5%)}
+@media(min-width:900px){.luna{left:auto;right:-6%;top:6%;width:min(52vw,720px);transform:none}}
+
+.ciudad{position:absolute;z-index:-2;left:0;right:0;bottom:0;width:100%;height:58%;display:block}
+.azotea{position:absolute;z-index:-1;left:0;right:0;bottom:0;width:100%;height:auto}
+.avs{position:absolute;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
+.av{position:absolute;height:2px;width:90px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--c,#ff2d55));animation:volar var(--d,9s) linear infinite;animation-delay:var(--r,0s)}
+.av::after{content:"";position:absolute;right:-2px;top:-2px;width:6px;height:6px;border-radius:50%;background:var(--c,#ff2d55);box-shadow:0 0 10px var(--c,#ff2d55)}
+@keyframes volar{from{transform:translateX(-120px)}to{transform:translateX(calc(100vw + 120px))}}
+
+.portada{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding-top:var(--e9);padding-bottom:calc(30svh + var(--e4))}
+@media(min-width:900px){.portada{justify-content:center;padding-bottom:var(--e9)}}
+.marca-semillero{font-family:var(--display);font-weight:700;font-size:var(--t-sm);letter-spacing:.18em;text-transform:uppercase;
+  display:inline-block;align-self:flex-start;background:var(--rojo);color:var(--tinta);padding:var(--e1) var(--e3);transform:skewX(-12deg)}
+@media(max-width:600px){.marca-semillero{letter-spacing:.06em}}
+.marca-semillero span{display:inline-block;transform:skewX(12deg)}
+h1{font-family:var(--display);font-weight:700;font-style:italic;text-transform:uppercase;
+  font-size:clamp(3.6rem,17vw,9.5rem);line-height:.82;letter-spacing:-.02em;margin:var(--e7) 0 var(--e6);
+  color:var(--amarillo);position:relative;transform:skewY(-6deg);transform-origin:left;
+  text-shadow:-2px -2px 0 var(--tinta),2px -2px 0 var(--tinta),-2px 2px 0 var(--tinta),2px 2px 0 var(--tinta),8px 8px 0 var(--rosa),14px 14px 0 var(--tinta)}
+h1 .linea{display:block}
+h1 .linea:nth-child(2){padding-left:.5em;color:var(--cian);text-shadow:-2px -2px 0 var(--tinta),2px -2px 0 var(--tinta),-2px 2px 0 var(--tinta),2px 2px 0 var(--tinta),8px 8px 0 var(--rosa),14px 14px 0 var(--tinta)}
+.sande{position:absolute;inset:0;pointer-events:none;user-select:none;text-shadow:none!important;opacity:0}
+.sande .linea:nth-child(2){padding-left:.5em}
+.s1{color:var(--rosa)!important}.s2{color:var(--cian)!important}.s3{color:var(--amarillo)!important}
+.s1 .linea,.s2 .linea,.s3 .linea{color:inherit!important;text-shadow:none!important}
+.sandevistan .s1{animation:fantasma .9s ease-out forwards}
+.sandevistan .s2{animation:fantasma .9s .08s ease-out forwards}
+.sandevistan .s3{animation:fantasma .9s .16s ease-out forwards}
+@keyframes fantasma{0%{opacity:.85;transform:translateX(0)}100%{opacity:0;transform:translateX(-70px)}}
+
+.lead{max-width:32ch;font-size:var(--t-md);font-weight:600;background:var(--tinta);padding:var(--e3) var(--e4);border-left:4px solid var(--cian);box-shadow:var(--sombra-dura)}
+.lead strong{color:var(--cian)}
+.acciones{display:flex;flex-wrap:wrap;gap:var(--e4) var(--e5);align-items:center;margin-top:var(--e6)}
+.boton{display:inline-flex;align-items:center;min-height:52px;padding:0 var(--e5);font-family:var(--display);font-weight:700;font-size:var(--t-base);
+  text-decoration:none;text-transform:uppercase;letter-spacing:.04em;background:var(--amarillo);color:var(--tinta);
+  clip-path:polygon(0 0,calc(100% - var(--corte)) 0,100% var(--corte),100% 100%,var(--corte) 100%,0 calc(100% - var(--corte)));
+  filter:drop-shadow(5px 5px 0 var(--rosa));transition:transform .12s,filter .12s}
+.boton:hover{transform:translate(-3px,-3px);filter:drop-shadow(8px 8px 0 var(--rosa))}
+.boton:active{transform:translate(2px,2px);filter:drop-shadow(2px 2px 0 var(--rosa))}
+.enlace-sec{font-family:var(--display);font-weight:700;color:var(--luna);min-height:48px;display:inline-flex;align-items:center;background:var(--tinta);padding:0 var(--e4)}
+.enlace-sec:hover{color:var(--cian)}
+
+/* ---------- Cinta de advertencia entre escenas ---------- */
+.cinta{position:relative;z-index:3;overflow:hidden;background:var(--amarillo);color:var(--tinta);transform:rotate(-2deg) scale(1.04);margin:-18px 0;
+  font-family:var(--display);font-weight:700;font-size:var(--t-md);text-transform:uppercase;letter-spacing:.08em;border-block:3px solid var(--tinta)}
+.cinta.rosa{background:var(--rosa);transform:rotate(1.5deg) scale(1.04)}
+.cinta div{display:flex;width:max-content;animation:cinta 28s linear infinite}
+.cinta.rosa div{animation-direction:reverse}
+.cinta span{padding:var(--e2) var(--e4);white-space:nowrap}
+.cinta span::after{content:"◢◤";margin-left:var(--e4)}
+@keyframes cinta{to{transform:translateX(-50%)}}
+
+/* ---------- Escenas ---------- */
+section{position:relative;z-index:1;padding:var(--e8) 0}
+@media(min-width:720px){section{padding:var(--e9) 0}}
+h2{font-family:var(--display);font-weight:700;font-style:italic;text-transform:uppercase;font-size:var(--t-lg);line-height:.95;margin-bottom:var(--e5);
+  display:inline-block;transform:skewY(-3deg);text-shadow:4px 4px 0 var(--rosa)}
+@media(min-width:720px){h2{font-size:var(--t-xl)}}
+.revelar{opacity:0;transform:translateX(-40px);transition:opacity .5s,transform .5s cubic-bezier(.2,.9,.2,1)}
+.revelar.visto{opacity:1;transform:none}
+p+p{margin-top:var(--e3)}
+.angosto{max-width:62ch}
+.tenue{color:var(--luna-tenue)}
+
+/* Escena 1: la idea + terminal tipo braindance */
+.idea{display:grid;gap:var(--e6);align-items:start}
+@media(min-width:900px){.idea{grid-template-columns:1fr 1.15fr}}
+.bd{position:relative;padding:var(--e5) var(--e4);background:rgba(5,3,15,.9);font-family:"Consolas","Cascadia Mono",monospace;font-size:.95rem;min-height:250px;overflow:hidden}
+.bd .esq{position:absolute;width:22px;height:22px;border:3px solid var(--rojo)}
+.bd .a{top:0;left:0;border-right:0;border-bottom:0}.bd .b{top:0;right:0;border-left:0;border-bottom:0}
+.bd .c{bottom:0;left:0;border-right:0;border-top:0}.bd .d{bottom:0;right:0;border-left:0;border-top:0}
+.bd .rec{position:absolute;top:var(--e2);right:var(--e5);font-size:.75rem;color:var(--rojo);letter-spacing:.1em}
+.bd .rec::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--rojo);margin-right:6px;animation:parpadeo 1.2s steps(1) infinite}
+.bd .barrido{position:absolute;left:0;right:0;height:40px;top:-40px;background:linear-gradient(transparent,rgba(255,45,85,.18),transparent);animation:barrer 3.5s linear infinite}
+@keyframes barrer{to{top:110%}}
+.bd .l{display:block;white-space:pre-wrap;word-break:break-word;position:relative}
+.bd .yo{color:var(--amarillo)} .bd .sis{color:var(--luna-tenue)} .bd .frag{color:var(--cian)} .bd .pend{color:var(--rosa)}
+.cursor{display:inline-block;width:.6em;height:1em;background:var(--cian);vertical-align:-2px;animation:parpadeo 1s steps(1) infinite}
+@keyframes parpadeo{50%{opacity:0}}
+.pie-bd{margin-top:var(--e3);font-size:var(--t-sm)}
+
+/* Escena 2: la tarea (lo más legible de la página) */
+.convocatoria{position:relative}
+.sello{display:inline-block;font-family:var(--display);font-weight:700;font-size:var(--t-sm);letter-spacing:.1em;text-transform:uppercase;
+  background:var(--tinta);color:var(--amarillo);padding:var(--e1) var(--e3);margin-bottom:var(--e3);border:1px solid var(--amarillo)}
+.tarea{background:var(--amarillo);color:var(--tinta);padding:var(--e6) var(--e5) var(--e7);box-shadow:10px 10px 0 var(--rosa),20px 20px 0 var(--tinta);
+  clip-path:polygon(0 0,calc(100% - 36px) 0,100% 36px,100% 100%,0 100%)}
+@media(min-width:720px){.tarea{padding:var(--e7) var(--e7) var(--e8)}}
+.tarea h2{color:var(--tinta);text-shadow:4px 4px 0 var(--rosa)}
+.tarea ol{list-style:none;counter-reset:t;display:grid;gap:var(--e5);max-width:62ch;font-size:var(--t-md)}
+.tarea li{counter-increment:t;position:relative;padding-left:3.2rem}
+.tarea li::before{content:counter(t);position:absolute;left:0;top:-.15em;font-family:var(--display);font-weight:700;font-style:italic;font-size:2.4rem;line-height:1;color:var(--rosa);-webkit-text-stroke:2px var(--tinta)}
+.tarea a{color:var(--tinta);font-weight:700;text-decoration-thickness:2px}
+.tarea .ejemplos{font-size:var(--t-base);margin-top:var(--e2);background:rgba(5,3,15,.08);padding:var(--e2) var(--e3);border-left:3px solid var(--tinta)}
+.versus{display:grid;grid-template-columns:1fr 1fr;gap:var(--e3);margin-top:var(--e3);font-size:var(--t-base)}
+.versus>div{padding:var(--e3);border:2px solid var(--tinta);position:relative}
+.versus .si{background:var(--tinta);color:var(--luna);box-shadow:4px 4px 0 var(--cian)}
+.versus .no{background:transparent;color:var(--tinta);opacity:.85}
+.versus b{display:block;font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:var(--t-sm);margin-bottom:var(--e1)}
+.versus .si b{color:var(--cian)} .versus .si b::before{content:"✓ "}
+.versus .no b{color:var(--tinta)} .versus .no b::before{content:"✕ ";color:var(--rojo)}
+.versus q{display:block;font-weight:600;line-height:1.3;quotes:"«" "»"}
+.versus .no q{text-decoration:line-through;text-decoration-color:var(--rojo);text-decoration-thickness:2px}
+.versus small{display:block;margin-top:var(--e2);font-size:var(--t-sm);line-height:1.35}
+.versus .si small{color:var(--luna-tenue)}
+.nota-cuenta{margin-top:var(--e3);font-size:var(--t-sm);line-height:1.45}
+@media(max-width:600px){.tarea li{padding-left:2.4rem}.tarea li::before{font-size:2rem}}
+.tarea .por-que{margin-top:var(--e5);max-width:60ch}
+.tarea .boton{background:var(--tinta);color:var(--amarillo);margin-top:var(--e5);filter:drop-shadow(5px 5px 0 var(--rosa))}
+
+.reunion{display:grid;gap:var(--e6);margin-top:var(--e8)}
+@media(min-width:820px){.reunion{grid-template-columns:1fr 1.2fr}}
+.reunion h3{font-family:var(--display);font-weight:700;font-style:italic;text-transform:uppercase;font-size:var(--t-md);color:var(--cian);margin-bottom:var(--e3)}
+.datos{background:var(--noche-2);padding:var(--e5);border-top:4px solid var(--cian);box-shadow:var(--sombra-dura)}
+.datos dt{font-family:var(--display);color:var(--amarillo);font-size:var(--t-sm);text-transform:uppercase;letter-spacing:.08em}
+.datos dd{margin:0 0 var(--e3)}
+.datos dd:last-child{margin-bottom:0}
+.agenda{list-style:none;counter-reset:a}
+.agenda li{counter-increment:a;padding:var(--e3) 0 var(--e3) 2.4rem;border-bottom:1px solid var(--noche-3);position:relative}
+.agenda li::before{content:counter(a,decimal-leading-zero);position:absolute;left:0;font-family:var(--display);font-weight:700;color:var(--rosa)}
+
+.boton-cian{background:var(--cian);color:var(--tinta);margin-top:var(--e5)}
+.centro{list-style:none;display:grid;gap:var(--e3);margin-top:var(--e5)}
+@media(min-width:720px){.centro{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.centro{grid-template-columns:repeat(4,1fr)}}
+.centro a,.centro .pronto{display:grid;grid-template-columns:1fr auto;align-items:end;gap:0 var(--e3);min-height:120px;padding:var(--e4);background:var(--noche-2);border-top:4px solid var(--c);box-shadow:6px 6px 0 var(--c);text-decoration:none;color:var(--luna);transition:transform .12s}
+.centro a:hover{transform:translate(-3px,-3px)}
+.centro b{grid-column:1;font-family:var(--display);font-size:var(--t-md);color:var(--c)}
+.centro small{grid-column:1;color:var(--luna-tenue);font-size:var(--t-sm)}
+.centro .flecha{grid-column:2;grid-row:1/3;font-family:var(--display);font-weight:700;font-size:1.4rem;color:var(--c)}
+.centro .pronto{opacity:.6;box-shadow:none;border-top-style:dashed}
+.barra{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;justify-content:center;gap:2px;background:rgba(5,3,15,.88);border-bottom:1px solid var(--noche-3);backdrop-filter:none}
+.barra a{font-family:var(--display);font-weight:700;font-size:var(--t-sm);text-transform:uppercase;letter-spacing:.06em;color:var(--luna);text-decoration:none;padding:0 var(--e3);min-height:44px;display:flex;align-items:center}
+.barra a:hover{color:var(--amarillo)}
+@media(min-width:720px){.barra{justify-content:flex-end;padding-right:var(--e6)}.barra a{padding:0 var(--e4)}}
+section[id],[id="reunion"],[id="novedades"]{scroll-margin-top:60px}
+.sub{font-family:var(--display);font-weight:700;font-style:italic;text-transform:uppercase;font-size:var(--t-md);color:var(--cian);margin:var(--e7) 0 var(--e3)}
+.novedades{list-style:none;max-width:70ch}
+.novedades li{padding:var(--e3) 0;border-bottom:1px solid var(--noche-3)}
+.novedades time{display:inline-block;font-family:var(--display);font-weight:700;color:var(--amarillo);margin-right:var(--e3);min-width:7.5em}
+/* Escena 3: el flujo como circuito */
+.flujo{list-style:none;margin-top:var(--e6);counter-reset:paso;position:relative}
+.flujo li{counter-increment:paso;position:relative;padding:var(--e3) 0 var(--e3) 3rem}
+.flujo li::before{content:"";position:absolute;left:11px;top:0;bottom:0;width:2px;background:var(--cian);box-shadow:0 0 8px var(--cian)}
+.flujo li:first-child::before{top:50%}.flujo li:last-child::before{bottom:50%}
+.flujo li::after{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%) rotate(45deg);width:24px;height:24px;background:var(--noche);border:2px solid var(--cian);
+  display:grid;place-items:center;font-family:var(--display);font-size:.75rem;font-weight:700;color:var(--cian)}
+.flujo b{font-family:var(--display);font-size:var(--t-md);color:var(--luna)}
+.flujo b::before{content:counter(paso) ". ";color:var(--rosa)}
+.flujo span{color:var(--luna-tenue)}
+.flujo li:last-child b{color:var(--amarillo)}
+.flujo li.pulso::after{background:var(--cian);color:var(--tinta);box-shadow:0 0 16px var(--cian)}
+@media(min-width:1000px){
+  .flujo{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--e3)}
+  .flujo li{padding:3rem var(--e3) 0 0}
+  .flujo li::before{left:0;right:0;top:11px;bottom:auto;width:auto;height:2px}
+  .flujo li:first-child::before{left:12px;top:11px}.flujo li:last-child::before{right:auto;width:12px;bottom:auto}
+  .flujo li::after{top:0;transform:rotate(45deg)}
+  .flujo b,.flujo span{display:block}
+  .flujo span{font-size:var(--t-sm);margin-top:var(--e1)}
+}
+
+/* Escena 4: ruta por nivel */
+.niveles{display:grid;gap:var(--e6);margin-top:var(--e5)}
+@media(min-width:900px){.niveles{grid-template-columns:1fr 1fr}}
+.nivel{background:var(--noche-2);padding:var(--e5) var(--e4);border-top:4px solid var(--c);box-shadow:6px 6px 0 var(--c);position:relative}
+.nivel .etiqueta{position:absolute;top:-14px;right:var(--e4);background:var(--c);color:var(--tinta);font-family:var(--display);font-weight:700;font-size:.75rem;letter-spacing:.1em;padding:2px var(--e2);text-transform:uppercase}
+.nivel h3{font-family:var(--display);font-weight:700;font-size:var(--t-md);color:var(--c);margin-bottom:var(--e1);line-height:1.15}
+.nivel>p{color:var(--luna-tenue);margin-bottom:var(--e4)}
+.recursos{list-style:none;display:grid;gap:var(--e2)}
+.recursos a{display:flex;justify-content:space-between;align-items:center;gap:var(--e3);padding:var(--e3);background:var(--noche);border-left:3px solid var(--c);text-decoration:none;color:var(--luna);min-height:56px;position:relative;overflow:hidden}
+.recursos a::before{content:"";position:absolute;inset:0;background:var(--c);transform:translateX(-101%);transition:transform .2s cubic-bezier(.2,.9,.2,1);z-index:0}
+.recursos a:hover::before{transform:none}
+.recursos a:hover,.recursos a:hover small{color:var(--tinta)}
+.recursos a>*{position:relative;z-index:1}
+.recursos a b{font-weight:600}
+.recursos a small{display:block;color:var(--luna-tenue);font-size:var(--t-sm)}
+.recursos a .flecha{color:var(--c);font-family:var(--display);font-weight:700;flex:none;font-size:1.2rem}
+.recursos a:hover .flecha{color:var(--tinta)}
+.obligatorio{display:inline-block;background:var(--amarillo);color:var(--tinta);font-family:var(--display);font-weight:700;font-size:.72rem;padding:0 6px;margin-right:var(--e2);vertical-align:2px;text-transform:uppercase}
+
+/* Final: volver a la luna */
+.final{position:relative;z-index:1;text-align:center;padding:var(--e9) 0 var(--e8);overflow:hidden}
+.final .luna-chica{width:140px;aspect-ratio:1;border-radius:50%;margin:0 auto var(--e5);
+  background:radial-gradient(circle at 40% 38%,#fffdf4 0%,#f3ecff 35%,#dcd0f5 62%,#b3a6de 100%);box-shadow:0 0 60px 10px rgba(239,234,247,.3)}
+.final p.frase{font-family:var(--display);font-weight:700;font-style:italic;text-transform:uppercase;font-size:var(--t-lg);line-height:1;color:var(--amarillo);text-shadow:4px 4px 0 var(--rosa)}
+footer{position:relative;z-index:1;padding:var(--e6) 0 var(--e8);color:var(--luna-tenue);font-size:var(--t-sm);border-top:1px solid var(--noche-3)}
+footer a{color:var(--luna-tenue)}
+footer p+p{margin-top:var(--e2)}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  #lluvia,#rastro,.avs{display:none}
+  .revelar{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<canvas id="lluvia" aria-hidden="true"></canvas>
+<canvas id="rastro" aria-hidden="true"></canvas>
+<div class="grano" aria-hidden="true"></div>
+
+<nav class="barra" aria-label="Secciones">
+  <a href="#tarea">Tarea</a><a href="#reunion">Reunión</a><a href="#centro">Enlaces</a><a href="#novedades">Novedades</a>
+</nav>
+<header class="cielo">
+  <div class="velocidad" aria-hidden="true"></div>
+  <div class="luna" aria-hidden="true"></div>
+  <div class="avs" aria-hidden="true">
+    <span class="av" style="top:18%;--d:11s;--r:-2s;--c:#ff2d55"></span>
+    <span class="av" style="top:31%;--d:15s;--r:-9s;--c:#5ce1e6"></span>
+    <span class="av" style="top:44%;--d:8s;--r:-5s;--c:#f5e829"></span>
+  </div>
+  <canvas class="ciudad" aria-hidden="true" id="ciudad"></canvas>
+  <svg class="azotea" viewBox="0 0 1440 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <path d="M0 70 L520 70 L520 58 L760 58 L760 70 L1440 70 L1440 120 L0 120Z" fill="#05030f"/>
+    <rect x="0" y="66" width="1440" height="3" fill="#ff2d55" opacity=".8"/>
+    <!-- dos figuras sentadas en el borde, mirando la luna -->
+    <g fill="#05030f">
+      <circle cx="604" cy="20" r="7"/><path d="M596 28 Q604 25 612 28 L614 58 L594 58Z"/><path d="M596 56 L590 78 L596 79 L602 58Z"/><path d="M606 56 L606 80 L612 80 L612 58Z"/>
+      <circle cx="636" cy="22" r="6.5"/><path d="M627 21 Q636 9 646 22 L648 30 Q642 24 636 26Z"/><path d="M629 30 Q636 27 643 30 L645 58 L627 58Z"/><path d="M630 56 L626 79 L632 80 L636 58Z"/><path d="M639 56 L641 80 L647 79 L644 57Z"/>
+    </g>
+  </svg>
+  <div class="envoltura portada">
+    <p class="marca-semillero"><span>Semillero AtarraIA · Redes Neuronales</span></p>
+    <h1 id="titulo"><span class="linea">RAG Legal</span><span class="linea">UNAL</span>
+      <span class="sande s1" aria-hidden="true"><span class="linea">RAG Legal</span><span class="linea">UNAL</span></span>
+      <span class="sande s2" aria-hidden="true"><span class="linea">RAG Legal</span><span class="linea">UNAL</span></span>
+      <span class="sande s3" aria-hidden="true"><span class="linea">RAG Legal</span><span class="linea">UNAL</span></span>
+    </h1>
+    <p class="lead">Vamos a construir un sistema al que le preguntes por la normativa de la UNAL y te responda <strong>citando la norma exacta</strong>, no inventándose la respuesta.</p>
+    <div class="acciones">
+      <a class="boton" href="#tarea">Tarea: 1 video y 1 pregunta</a>
+      <a class="enlace-sec" href="https://github.com/Mr-Percival/rag-legal-unal">Ver el repositorio ↗</a>
+    </div>
+  </div>
+</header>
+
+<div class="cinta" aria-hidden="true"><div><span>Normativa UNAL</span><span>Retrieval</span><span>Embeddings</span><span>Citar la fuente</span><span>Cero alucinaciones</span><span>AtarraIA</span><span>Normativa UNAL</span><span>Retrieval</span><span>Embeddings</span><span>Citar la fuente</span><span>Cero alucinaciones</span><span>AtarraIA</span></div></div>
+
+<main>
+  <section id="que-es">
+    <div class="envoltura idea">
+      <div class="revelar">
+        <h2>Lo que vamos a construir</h2>
+        <div class="angosto">
+          <p>Acuerdos, resoluciones, estatutos, reglamentos: la normativa de la UNAL está pública, pero encontrar la respuesta a algo concreto es otra historia. La idea es que cualquiera pregunte en lenguaje normal y el sistema busque los fragmentos de las normas que aplican y responda con base en eso.</p>
+          <p>Es un proyecto del semillero y lo construimos entre todos: cada quien aporta desde lo que sabe y aprende lo que le falta.</p>
+        </div>
+      </div>
+      <div class="revelar">
+        <div class="bd" id="terminal" role="img" aria-label="Ejemplo de cómo debería responder el sistema: el estudiante pregunta cuántas veces puede cancelar una asignatura, el sistema recupera fragmentos del Estatuto Estudiantil y responde citándolos. El artículo exacto aún no está, porque eso es lo que vamos a construir.">
+          <span class="esq a"></span><span class="esq b"></span><span class="esq c"></span><span class="esq d"></span>
+          <span class="rec">REC · MAQUETA</span><span class="barrido"></span>
+        </div>
+        <p class="pie-bd tenue">El artículo aparece como <span style="color:var(--rosa)">??</span> porque eso es justo lo que todavía no existe.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="tarea" aria-labelledby="titulo-tarea">
+    <div class="envoltura convocatoria">
+      <span class="sello">Convocatoria de arranque · 31-oct-2026</span>
+      <div class="tarea revelar">
+        <h2 id="titulo-tarea">Tarea antes de la reunión</h2>
+        <ol>
+          <li>Ver <a href="https://www.youtube.com/watch?v=T-D1OfcDW1M" target="_blank" rel="noopener">What is RAG?, de IBM</a>. Son 6 minutos; si el inglés les cuesta, activen los subtítulos en español (⚙ → Subtítulos → Traducir automáticamente).</li>
+          <li>Dejar en GitHub una pregunta real sobre la normativa de la UNAL que les gustaría que el sistema respondiera.
+            <div class="versus">
+              <div class="si"><b>Sirve</b><q>¿Cuántas veces puedo cancelar una asignatura?</q><small>Es concreta y la respuesta está en una norma.</small></div>
+              <div class="no"><b>No sirve</b><q>¿Qué es el estatuto?</q><small>Es muy general; no hay un artículo que la responda.</small></div>
+            </div>
+            <p class="nota-cuenta">¿Sin cuenta de GitHub? Es gratis y toma 5 minutos: <a href="https://github.com/signup" target="_blank" rel="noopener">crear cuenta</a> · <a href="https://www.youtube.com/results?search_query=c%C3%B3mo+crear+una+cuenta+de+GitHub+paso+a+paso" target="_blank" rel="noopener">video paso a paso</a>. Escojan un usuario que les guste mostrar: ese perfil termina siendo su portafolio.</p></li>
+        </ol>
+        <p class="por-que">Eso es todo. Con esas preguntas armamos el conjunto de prueba: cuando el RAG empiece a responder, las usamos para medir si acierta.</p>
+        <a class="boton" href="https://github.com/Mr-Percival/rag-legal-unal/issues/new?template=pregunta.yml" target="_blank" rel="noopener">Dejar mi pregunta</a>
+      </div>
+
+      <div class="reunion revelar" id="reunion">
+        <div>
+          <h3>Reunión de arranque</h3>
+          <dl class="datos">
+            <dt>Modo</dt><dd>Virtual (estamos en paro)</dd>
+            <dt>Cuándo</dt><dd>Entre el martes 3 y el viernes 6 de noviembre. Marquen en el When2meet cuándo pueden y escogemos el horario donde quepa la mayoría.</dd>
+            <dt>Duración</dt><dd>45 a 60 minutos</dd>
+            <dt>Enlace</dt><dd>Aparece aquí cuando definamos el horario</dd>
+          </dl>
+          <a class="boton boton-cian" href="https://www.when2meet.com/?39606729-rn6Ir" target="_blank" rel="noopener">Marcar mi disponibilidad</a>
+        </div>
+        <div>
+          <h3>Agenda</h3>
+          <ol class="agenda">
+            <li>Qué vamos a construir y hasta dónde llega la primera versión.</li>
+            <li>De dónde sacamos los documentos y cómo los vamos a procesar.</li>
+            <li>Con qué herramientas lo vamos a hacer.</li>
+            <li>Cómo nos repartimos el trabajo: rotamos por todas las partes (datos, búsqueda, modelo, evaluación) para que todos aprendan el RAG completo.</li>
+            <li>Cómo vamos a trabajar: reuniones, repositorio y tareas.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="centro" aria-labelledby="titulo-centro">
+    <div class="envoltura">
+      <h2 id="titulo-centro">Todo el proyecto, aquí</h2>
+      <p class="angosto tenue">Guarden esta página: aquí va a estar todo lo del proyecto a medida que avance.</p>
+      <ul class="centro">
+        <li><a href="https://github.com/Mr-Percival/rag-legal-unal" target="_blank" rel="noopener" style="--c:var(--cian)"><b>Repositorio</b><small>el código y la documentación</small><span class="flecha">↗</span></a></li>
+        <li><a href="https://github.com/Mr-Percival/rag-legal-unal/issues?q=label%3Apregunta" target="_blank" rel="noopener" style="--c:var(--amarillo)"><b>Preguntas del grupo</b><small>lo que todos quieren que el RAG responda</small><span class="flecha">↗</span></a></li>
+        <li><a href="https://www.when2meet.com/?39606729-rn6Ir" target="_blank" rel="noopener" style="--c:var(--rosa)"><b>Disponibilidad</b><small>When2meet de la reunión de arranque</small><span class="flecha">↗</span></a></li>
+        <li><span class="pronto" style="--c:var(--violeta)"><b>Enlace de la reunión</b><small>aparece cuando definamos el horario</small></span></li>
+      </ul>
+      <h3 class="sub" id="novedades">Novedades</h3>
+      <ol class="novedades" reversed>
+        <li><time datetime="2026-10-31">31 oct 2026</time> Arranca el proyecto. Está abierta la tarea de arranque y el When2meet para escoger el horario de la primera reunión.</li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="cinta rosa" aria-hidden="true"><div><span>Chunk</span><span>Embed</span><span>Retrieve</span><span>Generate</span><span>Cite</span><span>Chunk</span><span>Embed</span><span>Retrieve</span><span>Generate</span><span>Cite</span></div></div>
+
+  <section id="como">
+    <div class="envoltura">
+      <div class="revelar">
+        <h2>Cómo funciona un RAG</h2>
+        <p class="angosto">En corto: el modelo no se sabe la normativa. Primero buscamos los pedazos de las normas que tienen que ver con la pregunta y se los pasamos al modelo para que responda con eso. La mayor parte del trabajo está en los datos y en la búsqueda, no en el modelo.</p>
+      </div>
+      <ol class="flujo" id="flujo">
+        <li><b>Normas</b> <span>bajamos los documentos del Régimen Legal.</span></li>
+        <li><b>Chunks</b> <span>los partimos en pedazos con sentido: artículo, parágrafo.</span></li>
+        <li><b>Embeddings</b> <span>cada pedazo se vuelve un vector que captura su significado.</span></li>
+        <li><b>Base vectorial</b> <span>guardamos los vectores para buscar por parecido.</span></li>
+        <li><b>LLM + contexto</b> <span>le pasamos al modelo la pregunta y los pedazos más parecidos.</span></li>
+        <li><b>Respuesta con cita</b> <span>responde y dice de qué norma salió.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="ruta">
+    <div class="envoltura">
+      <div class="revelar">
+        <h2>Opcional: qué repasar según su nivel</h2>
+        <p class="angosto tenue">Nada de esto es obligatorio. Si quieren llegar con más base, empiecen por el grupo que les corresponde y sigan hasta donde la curiosidad los lleve.</p>
+      </div>
+      <div class="niveles">
+        <div class="nivel revelar" style="--c:var(--violeta)">
+          <span class="etiqueta">Nivel 0</span>
+          <h3>Nunca han usado Python o Git</h3>
+          <p>Lo mínimo para leer el código y trabajar en el mismo repositorio.</p>
+          <ul class="recursos">
+            <li><a href="https://www.youtube.com/results?search_query=MoureDev+curso+python+desde+cero" target="_blank" rel="noopener"><span><b>Curso de Python desde cero</b><small>MoureDev, en español</small></span><span class="flecha">↗</span></a></li>
+            <li><a href="https://www.youtube.com/results?search_query=MoureDev+curso+git+github+desde+cero" target="_blank" rel="noopener"><span><b>Curso de Git y GitHub desde cero</b><small>MoureDev, en español</small></span><span class="flecha">↗</span></a></li>
+          </ul>
+        </div>
+        <div class="nivel revelar" style="--c:var(--rosa)">
+          <span class="etiqueta">Nivel 1</span>
+          <h3>Ya programan, pero no saben cómo funciona un LLM</h3>
+          <p>Para entender qué hace el modelo por dentro.</p>
+          <ul class="recursos">
+            <li><a href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" rel="noopener"><span><b>Intro to Large Language Models</b><small>Andrej Karpathy, 1 hora, en inglés. El mejor panorama si tienen tiempo</small></span><span class="flecha">↗</span></a></li>
+            <li><a href="https://www.youtube.com/results?search_query=3Blue1Brown+transformers+attention" target="_blank" rel="noopener"><span><b>Transformers y Attention</b><small>3Blue1Brown, capítulos finales de su serie de redes neuronales</small></span><span class="flecha">↗</span></a></li>
+            <li><a href="https://www.youtube.com/results?search_query=Dot+CSV+embeddings+transformers" target="_blank" rel="noopener"><span><b>Embeddings y transformers</b><small>Dot CSV, en español</small></span><span class="flecha">↗</span></a></li>
+          </ul>
+        </div>
+        <div class="nivel revelar" style="--c:var(--amarillo)">
+          <span class="etiqueta">Nivel 2</span>
+          <h3>Saben de LLM y quieren meterse en RAG</h3>
+          <p>De la idea a la implementación.</p>
+          <ul class="recursos">
+            <li><a href="https://www.youtube.com/watch?v=T-D1OfcDW1M" target="_blank" rel="noopener"><span><b><span class="obligatorio">Tarea</span>What is Retrieval-Augmented Generation?</b><small>IBM Technology, 6 minutos, en inglés</small></span><span class="flecha">↗</span></a></li>
+            <li><a href="https://www.youtube.com/results?search_query=freeCodeCamp+Learn+RAG+From+Scratch+Lance+Martin" target="_blank" rel="noopener"><span><b>Learn RAG From Scratch</b><small>freeCodeCamp con Lance Martin: chunking, embeddings, retrieval y re-ranking</small></span><span class="flecha">↗</span></a></li>
+            <li><a href="https://www.deeplearning.ai/short-courses/" target="_blank" rel="noopener"><span><b>Chat with Your Data y Vector Databases</b><small>DeepLearning.AI, cursos cortos y gratis</small></span><span class="flecha">↗</span></a></li>
+          </ul>
+        </div>
+        <div class="nivel revelar" style="--c:var(--cian)">
+          <span class="etiqueta">Todos</span>
+          <h3>Conocer los datos</h3>
+          <p>Vamos a trabajar con documentos legales, así que conviene ver cómo están escritos antes de meterles código.</p>
+          <ul class="recursos">
+            <li><a href="http://www.legal.unal.edu.co" target="_blank" rel="noopener"><span><b>Régimen Legal de la UNAL</b><small>busquen una norma que les haya tocado como estudiantes</small></span><span class="flecha">↗</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="final">
+    <div class="luna-chica" aria-hidden="true"></div>
+    <p class="frase">Nos vemos en la reunión</p>
+  </div>
+</main>
+
+<footer>
+  <div class="envoltura">
+    <p>Proyecto del Semillero AtarraIA, Universidad Nacional de Colombia, sede Medellín · Dudas: <a href="https://github.com/Mr-Percival">@Mr-Percival</a></p>  </div>
+</footer>
+
+<script>
+(function(){
+  var quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var tactil = window.matchMedia('(hover: none)').matches;
+
+  /* Ciudad: escena en canvas con 4 capas de profundidad, neblina, megatorres,
+     ventanas por pisos, bordes de neón, hologramas, autopista elevada y reflectores */
+  (function(){
+    var cv=document.getElementById('ciudad'); if(!cv.getContext) return;
+    var ctx=cv.getContext('2d'), base=document.createElement('canvas'), bx=base.getContext('2d');
+    var W,H,dpr, balizas, vallas, carros, reflectores, autopistaY, sem=23;
+    function az(){ sem=(sem*9301+49297)%233280; return sem/233280; }
+    function entre(a,b){ return a+az()*(b-a); }
+    var NEON=['#5ce1e6','#ff4fb8','#f5e829','#ff2d55','#a98bff'];
+    var TXT=['RAG','AI','法','LLM','UNAL','規則','EMBED','24/7'];
+    var capas=[
+      {cuerpo:"#33266c",vent:.05,alto:[.30,.78],ancho:[.025,.06],neon:0,valla:0,torre:.25,haze:'rgba(169,139,255,.16)'},
+      {cuerpo:'#2a1e62',vent:.08,alto:[.25,.70],ancho:[.03,.07],neon:.08,valla:.06,torre:.25,haze:'rgba(255,79,184,.10)'},
+      {cuerpo:'#1a1243',vent:.12,alto:[.20,.62],ancho:[.04,.09],neon:.16,valla:.12,torre:.2,haze:'rgba(92,225,230,.08)'},
+      {cuerpo:'#0b0722',vent:.16,alto:[.12,.48],ancho:[.05,.11],neon:.22,valla:.14,torre:.15,haze:null}
+    ];
+    function construir(){
+      dpr=Math.min(window.devicePixelRatio||1,2);
+      W=cv.clientWidth; H=cv.clientHeight; if(!W||!H) return;
+      cv.width=base.width=W*dpr; cv.height=base.height=H*dpr;
+      ctx.setTransform(dpr,0,0,dpr,0,0); bx.setTransform(dpr,0,0,dpr,0,0);
+      sem=23; balizas=[]; vallas=[]; carros=[]; reflectores=[];
+      bx.clearRect(0,0,W,H);
+      var g=bx.createLinearGradient(0,H*.25,0,H);
+      g.addColorStop(0,'rgba(255,79,184,0)'); g.addColorStop(.6,'rgba(255,79,184,.18)'); g.addColorStop(1,'rgba(92,225,230,.12)');
+      bx.fillStyle=g; bx.fillRect(0,0,W,H);
+      var esc=Math.max(W,700);
+      capas.forEach(function(c,ci){
+        var x=-20;
+        while(x<W+20){
+          var w=entre(c.ancho[0],c.ancho[1])*esc, h=entre(c.alto[0],c.alto[1])*H, top=H-h;
+          bx.fillStyle=c.cuerpo;
+          bx.fillRect(x,top,w,h);
+          if(az()<.45){ var w2=w*entre(.45,.75), h2=h*entre(.1,.25); bx.fillRect(x+(w-w2)/2,top-h2,w2,h2); top-=h2;
+            if(az()<.5){ var w3=w2*.5,h3=h*.08; bx.fillRect(x+(w-w3)/2,top-h3,w3,h3); top-=h3; } }
+          if(az()<c.torre){ var ah=entre(15,60)*(ci<2?.7:1); bx.fillRect(x+w/2-1,top-ah,2,ah); balizas.push({x:x+w/2,y:top-ah,f:az()*6}); }
+          var piso=ci<2?5:7, col=ci<2?1.5:3;
+          for(var y=top+6; y<H-4; y+=piso){
+            if(az()<.25) continue;
+            for(var vx=x+3; vx<x+w-3; vx+=col+(ci<2?2:3)){
+              if(az()<c.vent*(ci<2?3:4)){
+                var tono=az();
+                bx.fillStyle= tono<.55?'rgba(255,214,140,'+entre(.25,.7)+')': tono<.8?'rgba(92,225,230,'+entre(.3,.7)+')':'rgba(255,79,184,'+entre(.3,.7)+')';
+                bx.fillRect(vx,y,col,ci<2?1.5:2.5);
+              }
+            }
+          }
+          if(az()<c.neon){ var nc=NEON[Math.floor(az()*NEON.length)]; bx.save(); bx.shadowColor=nc; bx.shadowBlur=10; bx.fillStyle=nc;
+            bx.fillRect(az()<.5?x:x+w-2,top+4,2,h*entre(.4,.9)); bx.restore(); }
+          if(az()<c.valla && w>40){ var vw=Math.min(w*.92,entre(60,130)), vh=vw*entre(.4,.6);
+            vallas.push({x:x+(w-vw)/2,y:top+h*entre(.12,.35),w:vw,h:vh,c:NEON[Math.floor(az()*4)],t:TXT[Math.floor(az()*TXT.length)],f:az()*10}); }
+          x+=w+entre(1,8);
+        }
+        if(c.haze){ var hz=bx.createLinearGradient(0,H*.45,0,H); hz.addColorStop(0,'rgba(0,0,0,0)'); hz.addColorStop(1,c.haze); bx.fillStyle=hz; bx.fillRect(0,0,W,H); }
+        if(ci===2){ autopistaY=H*.70;
+          bx.fillStyle='#0f0a2c'; bx.fillRect(0,autopistaY,W,7);
+          for(var px=30; px<W; px+=entre(120,200)) bx.fillRect(px,autopistaY+7,6,H-autopistaY);
+          bx.fillStyle='rgba(255,45,85,.6)'; bx.fillRect(0,autopistaY,W,1);
+          for(var k=0;k<Math.round(W/45);k++) carros.push({x:az()*W,v:entre(.6,1.6)*(az()<.5?1:-1)});
+        }
+      });
+      for(var r=0;r<3;r++) reflectores.push({x:W*entre(.1,.9),a:entre(-.6,.6),v:entre(.002,.005)*(az()<.5?1:-1),c:r===1?'255,79,184':'92,225,230'});
+      pintar(0);
+    }
+    function pintar(t){
+      if(!W) return;
+      ctx.clearRect(0,0,W,H);
+      ctx.save(); ctx.globalCompositeOperation='lighter';
+      reflectores.forEach(function(r){ var a=r.a+Math.sin(t*r.v*.06)*.5, L=H*1.6;
+        var gx=r.x+Math.sin(a)*L, gy=H-Math.cos(a)*L;
+        var g=ctx.createLinearGradient(r.x,H,gx,gy); g.addColorStop(0,'rgba('+r.c+',.18)'); g.addColorStop(1,'rgba('+r.c+',0)');
+        ctx.fillStyle=g; ctx.beginPath(); ctx.moveTo(r.x-3,H); ctx.lineTo(gx-60*Math.cos(a),gy-60*Math.sin(a)); ctx.lineTo(gx+60*Math.cos(a),gy+60*Math.sin(a)); ctx.lineTo(r.x+3,H); ctx.fill(); });
+      ctx.restore();
+      ctx.drawImage(base,0,0,W,H);
+      vallas.forEach(function(v){
+        var parp=(Math.sin(t*.004+v.f)>.96)?.25:1;
+        ctx.save(); ctx.globalAlpha=.85*parp; ctx.shadowColor=v.c; ctx.shadowBlur=18;
+        ctx.strokeStyle=v.c; ctx.lineWidth=1.5; ctx.strokeRect(v.x,v.y,v.w,v.h);
+        ctx.fillStyle=v.c; ctx.globalAlpha=.16*parp; ctx.fillRect(v.x,v.y,v.w,v.h);
+        ctx.globalAlpha=.95*parp; ctx.shadowBlur=12; ctx.font='700 '+Math.round(v.h*.55)+'px "Chakra Petch", sans-serif';
+        ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(v.t,v.x+v.w/2,v.y+v.h/2+1);
+        ctx.shadowBlur=0; ctx.globalAlpha=.12*parp; ctx.fillStyle='#000';
+        for(var sy=v.y+((t*.03)%3); sy<v.y+v.h; sy+=3) ctx.fillRect(v.x,sy,v.w,1);
+        ctx.restore(); });
+      carros.forEach(function(c){ if(t){ c.x+=c.v; if(c.x>W+20) c.x=-20; if(c.x<-20) c.x=W+20; }
+        ctx.fillStyle=c.v>0?'rgba(255,45,85,.95)':'rgba(255,240,200,.95)';
+        ctx.fillRect(c.x,autopistaY-2,c.v>0?-10:10,1.5); });
+      balizas.forEach(function(b){ if(Math.sin(t*.003+b.f)<=.3) return;
+        ctx.save(); ctx.fillStyle='#ff2d55'; ctx.shadowColor='#ff2d55'; ctx.shadowBlur=8; ctx.beginPath(); ctx.arc(b.x,b.y,1.6,0,6.3); ctx.fill(); ctx.restore(); });
+    }
+    function bucle(t){ pintar(t); requestAnimationFrame(bucle); }
+    var listo=function(){ construir(); if(!quieto) requestAnimationFrame(bucle); };
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(listo); else listo();
+    var rt; addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(construir,150); });
+  })();
+
+  /* Lluvia */
+  var cv=document.getElementById('lluvia');
+  if(!quieto && cv.getContext){
+    var ctx=cv.getContext('2d'), gotas=[], W, H;
+    function medir(){ var dpr=window.devicePixelRatio||1; W=innerWidth; H=innerHeight; cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+      gotas=[]; for(var i=0,n=Math.round(W/8);i<n;i++) gotas.push({x:Math.random()*W,y:Math.random()*H,l:8+Math.random()*20,v:7+Math.random()*10,c:Math.random()<.15?'255,79,184':'92,225,230'}); }
+    medir(); addEventListener('resize',medir);
+    (function caer(){ ctx.clearRect(0,0,W,H);
+      for(var i=0;i<gotas.length;i++){ var g=gotas[i]; ctx.strokeStyle='rgba('+g.c+',.35)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(g.x,g.y); ctx.lineTo(g.x-1.5,g.y+g.l); ctx.stroke();
+        g.y+=g.v; if(g.y>H){ g.y=-g.l; g.x=Math.random()*W; } }
+      requestAnimationFrame(caer); })();
+  }
+
+  /* Sandevistan: el título deja copias de color cada cierto tiempo y al pasarle el mouse */
+  var titulo=document.getElementById('titulo');
+  function sande(){ if(quieto) return; titulo.classList.remove('sandevistan'); void titulo.offsetWidth; titulo.classList.add('sandevistan'); }
+  setTimeout(sande,600); if(!quieto) setInterval(sande,6000);
+  titulo.addEventListener('mouseenter',sande);
+
+  /* Rastro del cursor tipo sandevistan (solo con mouse):
+     cinta arcoíris que se adelgaza, ecos del cursor que quedan atrás al moverse rápido
+     y onda de choque con aberración cromática al hacer clic */
+  var rc=document.getElementById('rastro');
+  if(!quieto && !tactil && rc.getContext){
+    var rx=rc.getContext('2d'), pts=[], ecos=[], ondas=[], chispas=[], RW, RH, ultimoEco=0, hue=0, activo=false;
+    function rm(){ var dpr=Math.min(window.devicePixelRatio||1,2); RW=innerWidth; RH=innerHeight; rc.width=RW*dpr; rc.height=RH*dpr; rx.setTransform(dpr,0,0,dpr,0,0); }
+    rm(); addEventListener('resize',rm);
+    addEventListener('mousemove',function(e){
+      var now=performance.now(), prev=pts[pts.length-1];
+      var vel=prev? Math.hypot(e.clientX-prev.x,e.clientY-prev.y)/Math.max(now-prev.t,1) : 0;
+      pts.push({x:e.clientX,y:e.clientY,t:now,v:vel});
+      // ecos: copias del cursor que se quedan atrás cuando se mueve rápido
+      if(vel>.8 && now-ultimoEco>45){ ultimoEco=now;
+        ecos.push({x:e.clientX,y:e.clientY,t:now,h:hue,ang:prev?Math.atan2(e.clientY-prev.y,e.clientX-prev.x):0}); }
+      if(!activo){ activo=true; requestAnimationFrame(dibujar); }
+    },{passive:true});
+    addEventListener('mousedown',function(e){
+      var now=performance.now();
+      ondas.push({x:e.clientX,y:e.clientY,t:now});
+      for(var i=0;i<14;i++){ var a=Math.PI*2*i/14+Math.random()*.3, v=2+Math.random()*4;
+        chispas.push({x:e.clientX,y:e.clientY,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:now,c:['#5ce1e6','#ff4fb8','#f5e829'][i%3]}); }
+      if(!activo){ activo=true; requestAnimationFrame(dibujar); }
+    });
+    function eco(e,edad){
+      var vida=1-edad/520; if(vida<=0) return;
+      rx.save(); rx.translate(e.x,e.y); rx.rotate(e.ang);
+      // tres capas desplazadas: aberración cromática
+      [['255,79,184',-3],['92,225,230',3],['245,232,41',0]].forEach(function(c){
+        rx.fillStyle='rgba('+c[0]+','+(vida*.45)+')';
+        rx.beginPath(); rx.moveTo(c[1]+0,-9); rx.lineTo(c[1]+7,0); rx.lineTo(c[1]+0,9); rx.lineTo(c[1]-7,0); rx.closePath(); rx.fill(); });
+      rx.strokeStyle='hsla('+e.h+',100%,70%,'+vida+')'; rx.lineWidth=1.5;
+      rx.strokeRect(-12-edad*.02,-12-edad*.02,24+edad*.04,24+edad*.04);
+      rx.restore();
+    }
+    function dibujar(){
+      var now=performance.now(); hue=(hue+2.5)%360;
+      rx.clearRect(0,0,RW,RH);
+      rx.globalCompositeOperation='lighter';
+      pts=pts.filter(function(p){ return now-p.t<380; });
+      // cinta: capa ancha y difusa + núcleo brillante
+      for(var pase=0;pase<2;pase++){
+        for(var i=1;i<pts.length;i++){
+          var a=pts[i-1], b=pts[i], vida=1-(now-b.t)/380, k=i/pts.length;
+          var ancho=(pase?1.5:7)*k*(1+Math.min(b.v,3)*.6);
+          rx.strokeStyle='hsla('+((hue+i*9)%360)+',100%,'+(pase?78:62)+'%,'+(vida*(pase?.95:.28))+')';
+          rx.lineWidth=ancho; rx.lineCap='round';
+          rx.beginPath(); rx.moveTo(a.x,a.y); rx.lineTo(b.x,b.y); rx.stroke();
+        }
+      }
+      ecos=ecos.filter(function(e){ return now-e.t<520; });
+      ecos.forEach(function(e){ eco(e,now-e.t); });
+      // onda de choque al hacer clic
+      ondas=ondas.filter(function(o){ return now-o.t<600; });
+      ondas.forEach(function(o){ var p=(now-o.t)/600, r=6+p*70;
+        [['92,225,230',-2],['255,79,184',2],['245,232,41',0]].forEach(function(c){
+          rx.strokeStyle='rgba('+c[0]+','+((1-p)*.8)+')'; rx.lineWidth=2.5*(1-p)+.5;
+          rx.beginPath(); rx.arc(o.x+c[1],o.y,r,0,Math.PI*2); rx.stroke(); }); });
+      chispas=chispas.filter(function(c){ return now-c.t<450; });
+      chispas.forEach(function(c){ var vida=1-(now-c.t)/450; c.x+=c.vx; c.y+=c.vy; c.vx*=.92; c.vy*=.92;
+        rx.strokeStyle=c.c; rx.globalAlpha=vida; rx.lineWidth=2;
+        rx.beginPath(); rx.moveTo(c.x,c.y); rx.lineTo(c.x-c.vx*3,c.y-c.vy*3); rx.stroke(); rx.globalAlpha=1; });
+      rx.globalCompositeOperation='source-over';
+      if(pts.length||ecos.length||ondas.length||chispas.length) requestAnimationFrame(dibujar);
+      else { activo=false; rx.clearRect(0,0,RW,RH); }
+    }
+  }
+
+  /* Revelar escenas al entrar */
+  var obs = 'IntersectionObserver' in window ? new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visto'); obs.unobserve(e.target); } }); },{threshold:.15}) : null;
+  document.querySelectorAll('.revelar').forEach(function(n){ if(obs && !quieto) obs.observe(n); else n.classList.add('visto'); });
+
+  /* Pulso que recorre el circuito del RAG */
+  var pasos=document.querySelectorAll('#flujo li'), k=0;
+  if(!quieto) setInterval(function(){ pasos.forEach(function(p){p.classList.remove('pulso');}); pasos[k%pasos.length].classList.add('pulso'); k++; },700);
+
+  /* Terminal braindance */
+  var lineas=[
+    ['yo','> ¿Cuántas veces puedo cancelar una asignatura?'],
+    ['sis','  buscando en la normativa…'],
+    ['frag','  [0.91] Acuerdo 008 de 2008 del CSU (Estatuto Estudiantil), art. ??'],
+    ['frag','  [0.87] Acuerdo 008 de 2008 del CSU (Estatuto Estudiantil), art. ??'],
+    ['res','< Según el Estatuto Estudiantil, art. ??, …'],
+    ['pend','  // aquí va la respuesta real. Para eso nos reunimos.']
+  ];
+  var term=document.getElementById('terminal'), arrancada=false;
+  function escribir(){
+    if(arrancada) return; arrancada=true;
+    var caja=document.createElement('div'); caja.style.marginTop='18px'; term.appendChild(caja);
+    if(quieto){ lineas.forEach(function(l){ var s=document.createElement('span'); s.className='l '+l[0]; s.textContent=l[1]; caja.appendChild(s); }); return; }
+    var i=0, j=0, actual=null, cursor=document.createElement('span'); cursor.className='cursor';
+    (function paso(){
+      if(i>=lineas.length){ caja.appendChild(cursor); return; }
+      if(!actual){ actual=document.createElement('span'); actual.className='l '+lineas[i][0]; caja.appendChild(actual); }
+      var t=lineas[i][1]; j++; actual.textContent=t.slice(0,j); actual.appendChild(cursor);
+      if(j>=t.length){ i++; j=0; actual=null; setTimeout(paso,420); } else setTimeout(paso, lineas[i][0]==='yo'?38:14);
+    })();
+  }
+  if('IntersectionObserver' in window){ new IntersectionObserver(function(e,o){ if(e[0].isIntersecting){ escribir(); o.disconnect(); } },{threshold:.4}).observe(term); } else escribir();
+})();
+</script>
+</body>
+</html>
