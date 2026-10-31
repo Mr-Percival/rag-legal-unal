@@ -1,0 +1,46 @@
+{
+  "_como_actualizar": "Este archivo alimenta la página. Para una novedad, agregar un objeto AL PRINCIPIO de 'novedades'. Para una semana nueva, agregar un objeto a 'semanas' y poner 'estado': 'actual' (la anterior pasa a 'hecha'). Los campos con null no se muestran. El enlace de la reunión se manda por el grupo de WhatsApp, no va aquí.",
+  "reunion": {
+    "cuando": null,
+    "when2meet": "https://www.when2meet.com/?39606729-rn6Ir"
+  },
+  "novedades": [
+    {
+      "fecha": "2026-10-31",
+      "texto": "Arranca el proyecto. Está abierta la tarea de arranque y el When2meet para escoger el horario de la primera reunión."
+    }
+  ],
+  "semanas": [
+    {
+      "numero": 0,
+      "titulo": "Arranque",
+      "fechas": "3 al 6 de noviembre",
+      "estado": "actual",
+      "objetivo": "Conocernos, entender qué es un RAG y definir el alcance de la primera versión.",
+      "tareas": [
+        "Marcar disponibilidad en el When2meet (1 min).",
+        "Ver el video de IBM sobre RAG (6 min).",
+        "Dejar una pregunta real sobre la normativa en GitHub."
+      ],
+      "materiales": [
+        {
+          "titulo": "What is RAG?, de IBM",
+          "url": "https://www.youtube.com/watch?v=T-D1OfcDW1M"
+        }
+      ],
+      "grabacion": null,
+      "acta": null
+    },
+    {
+      "numero": 1,
+      "titulo": "Por definir en la reunión de arranque",
+      "fechas": null,
+      "estado": "proxima",
+      "objetivo": null,
+      "tareas": [],
+      "materiales": [],
+      "grabacion": null,
+      "acta": null
+    }
+  ]
+}

@@ -13,6 +13,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2713%27 fill=%27%23efeaf7%27/%3E%3Ccircle cx=%2720%27 cy=%2719%27 r=%273%27 fill=%27%23b3a6de%27/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,700;1,700&family=Barlow:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -136,7 +137,7 @@ p+p{margin-top:var(--e3)}
 /* Escena 1: la idea + terminal tipo braindance */
 .idea{display:grid;gap:var(--e6);align-items:start}
 @media(min-width:900px){.idea{grid-template-columns:1fr 1.15fr}}
-.bd{position:relative;padding:var(--e5) var(--e4);background:rgba(5,3,15,.9);font-family:"Consolas","Cascadia Mono",monospace;font-size:.95rem;min-height:250px;overflow:hidden}
+.bd{position:relative;padding:var(--e5) var(--e4);background:rgba(5,3,15,.9);font-family:"Consolas","Cascadia Mono",monospace;font-size:.95rem;min-height:170px;overflow:hidden}
 .bd .esq{position:absolute;width:22px;height:22px;border:3px solid var(--rojo)}
 .bd .a{top:0;left:0;border-right:0;border-bottom:0}.bd .b{top:0;right:0;border-left:0;border-bottom:0}
 .bd .c{bottom:0;left:0;border-right:0;border-top:0}.bd .d{bottom:0;right:0;border-left:0;border-top:0}
@@ -152,7 +153,7 @@ p+p{margin-top:var(--e3)}
 
 /* Escena 2: la tarea (lo más legible de la página) */
 .convocatoria{position:relative}
-.sello{display:inline-block;font-family:var(--display);font-weight:700;font-size:var(--t-sm);letter-spacing:.1em;text-transform:uppercase;
+.sello{display:inline-block;white-space:nowrap;font-family:var(--display);font-weight:700;font-size:var(--t-sm);letter-spacing:.1em;text-transform:uppercase;
   background:var(--tinta);color:var(--amarillo);padding:var(--e1) var(--e3);margin-bottom:var(--e3);border:1px solid var(--amarillo)}
 .tarea{background:var(--amarillo);color:var(--tinta);padding:var(--e6) var(--e5) var(--e7);box-shadow:10px 10px 0 var(--rosa),20px 20px 0 var(--tinta);
   clip-path:polygon(0 0,calc(100% - 36px) 0,100% 36px,100% 100%,0 100%)}
@@ -193,7 +194,7 @@ p+p{margin-top:var(--e3)}
 .boton-cian{background:var(--cian);color:var(--tinta);margin-top:var(--e5)}
 .centro{list-style:none;display:grid;gap:var(--e3);margin-top:var(--e5)}
 @media(min-width:720px){.centro{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:1000px){.centro{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:1000px){.centro{grid-template-columns:repeat(3,1fr)}}
 .centro a,.centro .pronto{display:grid;grid-template-columns:1fr auto;align-items:end;gap:0 var(--e3);min-height:120px;padding:var(--e4);background:var(--noche-2);border-top:4px solid var(--c);box-shadow:6px 6px 0 var(--c);text-decoration:none;color:var(--luna);transition:transform .12s}
 .centro a:hover{transform:translate(-3px,-3px)}
 .centro b{grid-column:1;font-family:var(--display);font-size:var(--t-md);color:var(--c)}
@@ -205,10 +206,26 @@ p+p{margin-top:var(--e3)}
 .barra a:hover{color:var(--amarillo)}
 @media(min-width:720px){.barra{justify-content:flex-end;padding-right:var(--e6)}.barra a{padding:0 var(--e4)}}
 section[id],[id="reunion"],[id="novedades"]{scroll-margin-top:60px}
+.semanas{list-style:none;display:grid;gap:var(--e5);margin-top:var(--e5);margin-left:22px;position:relative;align-items:start}
+.semana{position:relative;padding:var(--e5) var(--e4) var(--e5) var(--e6);background:var(--noche-2);border-left:4px solid var(--c,var(--noche-3))}
+.semana[data-estado="actual"]{--c:var(--amarillo);box-shadow:6px 6px 0 var(--amarillo)}
+.semana[data-estado="hecha"]{--c:var(--cian)}
+.semana[data-estado="proxima"]{--c:var(--violeta);opacity:.7;border-left-style:dashed}
+.semana .num{position:absolute;left:-2px;top:var(--e4);transform:translateX(-50%);width:44px;height:44px;display:grid;place-items:center;background:var(--noche);border:2px solid var(--c);
+  font-family:var(--display);font-weight:700;color:var(--c);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.semana h3{font-family:var(--display);font-weight:700;font-size:var(--t-md);line-height:1.15}
+.semana .meta{font-size:var(--t-sm);color:var(--luna-tenue);margin:var(--e1) 0 var(--e3)}
+.semana .chip{display:inline-block;font-family:var(--display);font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;background:var(--c);color:var(--tinta);padding:1px var(--e2);margin-right:var(--e2)}
+.semana h4{font-family:var(--display);font-size:var(--t-sm);text-transform:uppercase;letter-spacing:.06em;color:var(--c);margin:var(--e3) 0 var(--e1)}
+.semana ul{padding-left:1.2em}
+.semana li{margin:2px 0}
+.semana .botones{display:flex;flex-wrap:wrap;gap:var(--e3);margin-top:var(--e4)}
+.semana .botones a{font-family:var(--display);font-weight:700;font-size:var(--t-sm);text-transform:uppercase;color:var(--tinta);background:var(--c);padding:var(--e2) var(--e3);text-decoration:none;min-height:40px;display:inline-flex;align-items:center}
+@media(min-width:900px){.semanas{grid-template-columns:1fr 1fr}}
 .sub{font-family:var(--display);font-weight:700;font-style:italic;text-transform:uppercase;font-size:var(--t-md);color:var(--cian);margin:var(--e7) 0 var(--e3)}
 .novedades{list-style:none;max-width:70ch}
 .novedades li{padding:var(--e3) 0;border-bottom:1px solid var(--noche-3)}
-.novedades time{display:inline-block;font-family:var(--display);font-weight:700;color:var(--amarillo);margin-right:var(--e3);min-width:7.5em}
+.novedades time{display:block;font-family:var(--display);font-weight:700;color:var(--amarillo);margin-right:var(--e3);min-width:7.5em}
 /* Escena 3: el flujo como circuito */
 .flujo{list-style:none;margin-top:var(--e6);counter-reset:paso;position:relative}
 .flujo li{counter-increment:paso;position:relative;padding:var(--e3) 0 var(--e3) 3rem}
@@ -251,10 +268,42 @@ section[id],[id="reunion"],[id="novedades"]{scroll-margin-top:60px}
 .obligatorio{display:inline-block;background:var(--amarillo);color:var(--tinta);font-family:var(--display);font-weight:700;font-size:.72rem;padding:0 6px;margin-right:var(--e2);vertical-align:2px;text-transform:uppercase}
 
 /* Final: volver a la luna */
-.final{position:relative;z-index:1;text-align:center;padding:var(--e9) 0 var(--e8);overflow:hidden}
-.final .luna-chica{width:140px;aspect-ratio:1;border-radius:50%;margin:0 auto var(--e5);
+.final{position:relative;z-index:1;text-align:center;padding:var(--e8) 0 0;overflow:hidden;
+  background:radial-gradient(90% 70% at 50% 75%,#2a1a5e 0%,#160d38 45%,var(--noche) 80%)}
+.estrellas{position:absolute;inset:0;background-image:
+  radial-gradient(1px 1px at 12% 20%,#fff 50%,transparent),radial-gradient(1px 1px at 28% 8%,#fff 50%,transparent),
+  radial-gradient(1.5px 1.5px at 44% 30%,#5ce1e6 50%,transparent),radial-gradient(1px 1px at 63% 12%,#fff 50%,transparent),
+  radial-gradient(1.5px 1.5px at 78% 26%,#ff4fb8 50%,transparent),radial-gradient(1px 1px at 90% 10%,#fff 50%,transparent),
+  radial-gradient(1px 1px at 6% 44%,#fff 50%,transparent),radial-gradient(1px 1px at 95% 48%,#fff 50%,transparent);
+  animation:titilar 4s ease-in-out infinite alternate}
+@keyframes titilar{from{opacity:.5}to{opacity:1}}
+.escena-final{position:relative;height:clamp(320px,62vw,560px);margin-top:var(--e5);overflow:hidden;-webkit-mask:linear-gradient(transparent,#000 14%);mask:linear-gradient(transparent,#000 14%)}
+.halo{position:absolute;left:50%;bottom:4%;width:min(95vw,640px);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(circle,rgba(239,234,247,.16) 0%,rgba(92,225,230,.08) 32%,rgba(255,79,184,.05) 50%,transparent 70%)}
+.luna-final{position:absolute;left:50%;bottom:6%;width:min(72vw,460px);aspect-ratio:1;transform:translateX(-50%) translateY(18%);border-radius:50%;
+  background:radial-gradient(circle at 40% 36%,#fffdf4 0%,#f3ecff 32%,#dcd0f5 60%,#a99bd9 100%);
+  box-shadow:0 0 0 2px rgba(255,255,255,.35),0 0 80px 20px rgba(239,234,247,.3);animation:subir 1.6s cubic-bezier(.2,.8,.2,1) both paused}
+.luna-final::before{content:"";position:absolute;inset:0;border-radius:50%;opacity:.4;
+  background-image:radial-gradient(rgba(90,70,150,.6) 1.2px,transparent 1.6px);background-size:7px 7px;
+  -webkit-mask:linear-gradient(120deg,transparent 35%,#000 90%);mask:linear-gradient(120deg,transparent 35%,#000 90%)}
+.luna-final::after{content:"";position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 62% 55%,rgba(110,90,170,.3) 0 9%,transparent 9.5%),radial-gradient(circle at 30% 64%,rgba(110,90,170,.22) 0 6%,transparent 6.5%),
+  radial-gradient(circle at 52% 24%,rgba(110,90,170,.18) 0 4%,transparent 4.5%),radial-gradient(circle at 76% 34%,rgba(110,90,170,.16) 0 3%,transparent 3.5%)}
+.final.visto .luna-final{animation-play-state:running}
+@keyframes subir{from{transform:translateX(-50%) translateY(55%)}to{transform:translateX(-50%) translateY(18%)}}
+.mira{position:absolute;left:50%;top:60%;width:min(86vw,640px);margin-top:calc(min(86vw,640px) / -2);transform:translateX(-50%);opacity:.8;animation:girar 40s linear infinite}
+.pareja{position:absolute;left:50%;bottom:calc(100vw * 64 / 1440 - 3px);width:clamp(150px,19vw,250px);transform:translateX(-50%);overflow:visible}
+@media(min-width:1440px){.pareja{bottom:61px}}
+.siluetas{filter:drop-shadow(0 0 1.2px rgba(239,234,247,.9)) drop-shadow(0 0 5px rgba(92,225,230,.55)) drop-shadow(0 0 12px rgba(255,79,184,.35))}
+.neon-a{filter:drop-shadow(0 0 3px #f5e829)} .neon-b{filter:drop-shadow(0 0 3px #ff4fb8)}
+.luna-vectores{position:absolute;inset:0;width:100%;height:100%;display:block}
+.horizonte{position:absolute;pointer-events:none;left:0;right:0;bottom:0;width:100%;height:auto}
+.final p.frase span{display:inline-block;transform:skewY(-4deg)}
+.final p.frase{position:relative;z-index:2;margin:-1px 0 0;padding:var(--e6) var(--e4) calc(var(--e8) + 6vw);background:#05030f}
+.final .luna-chica-x{
   background:radial-gradient(circle at 40% 38%,#fffdf4 0%,#f3ecff 35%,#dcd0f5 62%,#b3a6de 100%);box-shadow:0 0 60px 10px rgba(239,234,247,.3)}
-.final p.frase{font-family:var(--display);font-weight:700;font-style:italic;text-transform:uppercase;font-size:var(--t-lg);line-height:1;color:var(--amarillo);text-shadow:4px 4px 0 var(--rosa)}
+.final p.frase{font-family:var(--display);font-weight:700;font-style:italic;text-transform:uppercase;font-size:clamp(2rem,7vw,4.5rem);line-height:.95;color:var(--amarillo);
+  text-shadow:-2px -2px 0 var(--tinta),2px -2px 0 var(--tinta),-2px 2px 0 var(--tinta),2px 2px 0 var(--tinta),6px 6px 0 var(--rosa),11px 11px 0 var(--tinta)}
 footer{position:relative;z-index:1;padding:var(--e6) 0 var(--e8);color:var(--luna-tenue);font-size:var(--t-sm);border-top:1px solid var(--noche-3)}
 footer a{color:var(--luna-tenue)}
 footer p+p{margin-top:var(--e2)}
@@ -272,7 +321,7 @@ footer p+p{margin-top:var(--e2)}
 <div class="grano" aria-hidden="true"></div>
 
 <nav class="barra" aria-label="Secciones">
-  <a href="#tarea">Tarea</a><a href="#reunion">Reunión</a><a href="#centro">Enlaces</a><a href="#novedades">Novedades</a>
+  <a href="#tarea">Tarea</a><a href="#reunion">Reunión</a><a href="#centro">Enlaces</a><a href="#semanas">Semanas</a>
 </nav>
 <header class="cielo">
   <div class="velocidad" aria-hidden="true"></div>
@@ -286,11 +335,6 @@ footer p+p{margin-top:var(--e2)}
   <svg class="azotea" viewBox="0 0 1440 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
     <path d="M0 70 L520 70 L520 58 L760 58 L760 70 L1440 70 L1440 120 L0 120Z" fill="#05030f"/>
     <rect x="0" y="66" width="1440" height="3" fill="#ff2d55" opacity=".8"/>
-    <!-- dos figuras sentadas en el borde, mirando la luna -->
-    <g fill="#05030f">
-      <circle cx="604" cy="20" r="7"/><path d="M596 28 Q604 25 612 28 L614 58 L594 58Z"/><path d="M596 56 L590 78 L596 79 L602 58Z"/><path d="M606 56 L606 80 L612 80 L612 58Z"/>
-      <circle cx="636" cy="22" r="6.5"/><path d="M627 21 Q636 9 646 22 L648 30 Q642 24 636 26Z"/><path d="M629 30 Q636 27 643 30 L645 58 L627 58Z"/><path d="M630 56 L626 79 L632 80 L636 58Z"/><path d="M639 56 L641 80 L647 79 L644 57Z"/>
-    </g>
   </svg>
   <div class="envoltura portada">
     <p class="marca-semillero"><span>Semillero AtarraIA · Redes Neuronales</span></p>
@@ -301,7 +345,7 @@ footer p+p{margin-top:var(--e2)}
     </h1>
     <p class="lead">Vamos a construir un sistema al que le preguntes por la normativa de la UNAL y te responda <strong>citando la norma exacta</strong>, no inventándose la respuesta.</p>
     <div class="acciones">
-      <a class="boton" href="#tarea">Tarea: 1 video y 1 pregunta</a>
+      <a class="boton" href="#tarea">Tarea: 3 pasos, unos 15 minutos</a>
       <a class="enlace-sec" href="https://github.com/Mr-Percival/rag-legal-unal">Ver el repositorio ↗</a>
     </div>
   </div>
@@ -331,10 +375,11 @@ footer p+p{margin-top:var(--e2)}
 
   <section id="tarea" aria-labelledby="titulo-tarea">
     <div class="envoltura convocatoria">
-      <span class="sello">Convocatoria de arranque · 31-oct-2026</span>
+      <span class="sello">Convocatoria de arranque · 31 oct 2026</span>
       <div class="tarea revelar">
         <h2 id="titulo-tarea">Tarea antes de la reunión</h2>
         <ol>
+          <li>Marcar en el <a href="https://www.when2meet.com/?39606729-rn6Ir" target="_blank" rel="noopener">When2meet</a> cuándo pueden reunirse. Es lo más urgente: con eso escogemos el horario. Toma 1 minuto.</li>
           <li>Ver <a href="https://www.youtube.com/watch?v=T-D1OfcDW1M" target="_blank" rel="noopener">What is RAG?, de IBM</a>. Son 6 minutos; si el inglés les cuesta, activen los subtítulos en español (⚙ → Subtítulos → Traducir automáticamente).</li>
           <li>Dejar en GitHub una pregunta real sobre la normativa de la UNAL que les gustaría que el sistema respondiera.
             <div class="versus">
@@ -352,9 +397,9 @@ footer p+p{margin-top:var(--e2)}
           <h3>Reunión de arranque</h3>
           <dl class="datos">
             <dt>Modo</dt><dd>Virtual (estamos en paro)</dd>
-            <dt>Cuándo</dt><dd>Entre el martes 3 y el viernes 6 de noviembre. Marquen en el When2meet cuándo pueden y escogemos el horario donde quepa la mayoría.</dd>
+            <dt>Cuándo</dt><dd id="dato-cuando">Entre el martes 3 y el viernes 6 de noviembre. Marquen en el When2meet cuándo pueden y escogemos el horario donde quepa la mayoría. Lo anunciamos por el grupo de WhatsApp y aquí, en Novedades.</dd>
             <dt>Duración</dt><dd>45 a 60 minutos</dd>
-            <dt>Enlace</dt><dd>Aparece aquí cuando definamos el horario</dd>
+            <dt>Enlace</dt><dd>Llega por el grupo de WhatsApp</dd>
           </dl>
           <a class="boton boton-cian" href="https://www.when2meet.com/?39606729-rn6Ir" target="_blank" rel="noopener">Marcar mi disponibilidad</a>
         </div>
@@ -380,12 +425,19 @@ footer p+p{margin-top:var(--e2)}
         <li><a href="https://github.com/Mr-Percival/rag-legal-unal" target="_blank" rel="noopener" style="--c:var(--cian)"><b>Repositorio</b><small>el código y la documentación</small><span class="flecha">↗</span></a></li>
         <li><a href="https://github.com/Mr-Percival/rag-legal-unal/issues?q=label%3Apregunta" target="_blank" rel="noopener" style="--c:var(--amarillo)"><b>Preguntas del grupo</b><small>lo que todos quieren que el RAG responda</small><span class="flecha">↗</span></a></li>
         <li><a href="https://www.when2meet.com/?39606729-rn6Ir" target="_blank" rel="noopener" style="--c:var(--rosa)"><b>Disponibilidad</b><small>When2meet de la reunión de arranque</small><span class="flecha">↗</span></a></li>
-        <li><span class="pronto" style="--c:var(--violeta)"><b>Enlace de la reunión</b><small>aparece cuando definamos el horario</small></span></li>
       </ul>
       <h3 class="sub" id="novedades">Novedades</h3>
-      <ol class="novedades" reversed>
+      <ol class="novedades" id="lista-novedades">
         <li><time datetime="2026-10-31">31 oct 2026</time> Arranca el proyecto. Está abierta la tarea de arranque y el When2meet para escoger el horario de la primera reunión.</li>
       </ol>
+    </div>
+  </section>
+
+  <section id="semanas" aria-labelledby="titulo-semanas">
+    <div class="envoltura">
+      <h2 id="titulo-semanas">Semana a semana</h2>
+      <p class="angosto tenue">Aquí va quedando lo de cada semana: el objetivo, las tareas, los materiales, la grabación y el acta.</p>
+      <ol class="semanas" id="lista-semanas"></ol>
     </div>
   </section>
 
@@ -439,7 +491,6 @@ footer p+p{margin-top:var(--e2)}
           <h3>Saben de LLM y quieren meterse en RAG</h3>
           <p>De la idea a la implementación.</p>
           <ul class="recursos">
-            <li><a href="https://www.youtube.com/watch?v=T-D1OfcDW1M" target="_blank" rel="noopener"><span><b><span class="obligatorio">Tarea</span>What is Retrieval-Augmented Generation?</b><small>IBM Technology, 6 minutos, en inglés</small></span><span class="flecha">↗</span></a></li>
             <li><a href="https://www.youtube.com/results?search_query=freeCodeCamp+Learn+RAG+From+Scratch+Lance+Martin" target="_blank" rel="noopener"><span><b>Learn RAG From Scratch</b><small>freeCodeCamp con Lance Martin: chunking, embeddings, retrieval y re-ranking</small></span><span class="flecha">↗</span></a></li>
             <li><a href="https://www.deeplearning.ai/short-courses/" target="_blank" rel="noopener"><span><b>Chat with Your Data y Vector Databases</b><small>DeepLearning.AI, cursos cortos y gratis</small></span><span class="flecha">↗</span></a></li>
           </ul>
@@ -456,15 +507,28 @@ footer p+p{margin-top:var(--e2)}
     </div>
   </section>
 
-  <div class="final">
-    <div class="luna-chica" aria-hidden="true"></div>
-    <p class="frase">Nos vemos en la reunión</p>
+  <div class="final" id="final">
+    <div class="estrellas" aria-hidden="true"></div>
+    <div class="escena-final" aria-hidden="true">
+      <div class="halo"></div>
+      <canvas id="luna-vectores" class="luna-vectores"></canvas>
+      <svg class="mira" viewBox="0 0 200 200" style="pointer-events:none">
+        <circle cx="100" cy="100" r="96" fill="none" stroke="#5ce1e6" stroke-width=".6" stroke-dasharray="2 6"/>
+        <g stroke="#ff2d55" stroke-width="1.5"><path d="M100 0v14M100 186v14M0 100h14M186 100h14"/></g>
+        <path d="M30 30h14M30 30v14M170 30h-14M170 30v14M30 170h14M30 170v-14M170 170h-14M170 170v-14" stroke="#f5e829" stroke-width="1.2" fill="none"/>
+      </svg>
+      <svg class="horizonte" viewBox="0 0 1440 220" preserveAspectRatio="xMidYMax slice">
+        <path d="M0 150 L80 150 L80 120 L140 120 L140 150 L230 150 L230 95 L250 95 L250 80 L270 80 L270 95 L300 95 L300 150 L420 150 L420 130 L480 130 L480 150 L560 150 L560 158 L880 158 L880 150 L960 150 L960 105 L1000 105 L1000 70 L1012 70 L1012 105 L1050 105 L1050 150 L1150 150 L1150 125 L1230 125 L1230 150 L1320 150 L1320 110 L1380 110 L1380 150 L1440 150 L1440 220 L0 220Z" fill="#05030f"/>
+        <rect x="0" y="156" width="1440" height="2" fill="#ff2d55" opacity=".7"/>
+      </svg>
+    </div>
+    <p class="frase"><span>Nos vemos en la reunión</span></p>
   </div>
 </main>
 
 <footer>
   <div class="envoltura">
-    <p>Proyecto del Semillero AtarraIA, Universidad Nacional de Colombia, sede Medellín · Dudas: <a href="https://github.com/Mr-Percival">@Mr-Percival</a></p>  </div>
+    <p>Proyecto del Semillero AtarraIA, Universidad Nacional de Colombia, sede Medellín · Dudas: por el grupo de WhatsApp</p>  </div>
 </footer>
 
 <script>
@@ -612,14 +676,13 @@ footer p+p{margin-top:var(--e2)}
       if(!activo){ activo=true; requestAnimationFrame(dibujar); }
     });
     function eco(e,edad){
+      // estela de movimiento con aberración cromática: tres trazos paralelos que se estiran hacia atrás
       var vida=1-edad/520; if(vida<=0) return;
-      rx.save(); rx.translate(e.x,e.y); rx.rotate(e.ang);
-      // tres capas desplazadas: aberración cromática
-      [['255,79,184',-3],['92,225,230',3],['245,232,41',0]].forEach(function(c){
-        rx.fillStyle='rgba('+c[0]+','+(vida*.45)+')';
-        rx.beginPath(); rx.moveTo(c[1]+0,-9); rx.lineTo(c[1]+7,0); rx.lineTo(c[1]+0,9); rx.lineTo(c[1]-7,0); rx.closePath(); rx.fill(); });
-      rx.strokeStyle='hsla('+e.h+',100%,70%,'+vida+')'; rx.lineWidth=1.5;
-      rx.strokeRect(-12-edad*.02,-12-edad*.02,24+edad*.04,24+edad*.04);
+      var largo=14+edad*.05;
+      rx.save(); rx.translate(e.x,e.y); rx.rotate(e.ang); rx.lineCap='round';
+      [['255,79,184',-2.5],['92,225,230',2.5],['245,232,41',0]].forEach(function(c){
+        rx.strokeStyle='rgba('+c[0]+','+(vida*.55)+')'; rx.lineWidth=2.2*vida+.4;
+        rx.beginPath(); rx.moveTo(-largo,c[1]); rx.lineTo(0,c[1]); rx.stroke(); });
       rx.restore();
     }
     function dibujar(){
@@ -654,6 +717,133 @@ footer p+p{margin-top:var(--e2)}
       else { activo=false; rx.clearRect(0,0,RW,RH); }
     }
   }
+
+  /* Contenido que cambia semana a semana: sale de datos.json */
+  function esc(t){ var d=document.createElement('div'); d.textContent=t==null?'':String(t); return d.innerHTML; }
+  function fechaCorta(iso){ var m=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']; var p=String(iso).split('-'); return p.length===3? (+p[2])+' '+m[+p[1]-1]+' '+p[0] : esc(iso); }
+  fetch('datos.json',{cache:'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+    if(d.novedades && d.novedades.length){
+      document.getElementById('lista-novedades').innerHTML=d.novedades.map(function(n){
+        return '<li><time datetime="'+esc(n.fecha)+'">'+fechaCorta(n.fecha)+'</time> '+esc(n.texto)+(n.url?' <a href="'+esc(n.url)+'" target="_blank" rel="noopener">Ver ↗</a>':'')+'</li>'; }).join('');
+    }
+    var r=d.reunion||{};
+    if(r.cuando) document.getElementById('dato-cuando').textContent=r.cuando;
+    var etiquetas={actual:'Esta semana',hecha:'Hecha',proxima:'Próxima'};
+    document.getElementById('lista-semanas').innerHTML=(d.semanas||[]).map(function(w){
+      var h='<li class="semana" data-estado="'+esc(w.estado)+'"><span class="num">S'+esc(w.numero)+'</span>';
+      h+='<h3>'+esc(w.titulo)+'</h3><p class="meta"><span class="chip">'+(etiquetas[w.estado]||esc(w.estado))+'</span>'+(w.fechas?esc(w.fechas):'')+'</p>';
+      if(w.objetivo) h+='<p>'+esc(w.objetivo)+'</p>';
+      if(w.tareas&&w.tareas.length) h+='<h4>Tareas</h4><ul>'+w.tareas.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')+'</ul>';
+      if(w.materiales&&w.materiales.length) h+='<h4>Materiales</h4><ul>'+w.materiales.map(function(m){return '<li><a href="'+esc(m.url)+'" target="_blank" rel="noopener">'+esc(m.titulo)+'</a></li>';}).join('')+'</ul>';
+      var b=''; if(w.grabacion) b+='<a href="'+esc(w.grabacion)+'" target="_blank" rel="noopener">Grabación ↗</a>'; if(w.acta) b+='<a href="'+esc(w.acta)+'" target="_blank" rel="noopener">Acta ↗</a>';
+      if(b) h+='<div class="botones">'+b+'</div>';
+      return h+'</li>'; }).join('');
+  }).catch(function(){ /* sin datos.json se queda el contenido estático */ });
+
+  var fin=document.getElementById('final');
+  if('IntersectionObserver' in window && !quieto){ new IntersectionObserver(function(e,o){ if(e[0].isIntersecting){ fin.classList.add('visto'); o.disconnect(); } },{threshold:.25}).observe(fin); } else fin.classList.add('visto');
+  /* Luna final: esfera 3D de partículas que gira.
+     - Dispersa, parte de las partículas son fragmentos de texto legal (chunks);
+       al armarse se vuelven puntos (vectores).
+     - Cada pocos segundos una "consulta" sale desde abajo, se clava en la luna
+       y se encienden sus vecinos más cercanos (top-k): eso es el retrieval.
+     - El mouse aparta las partículas. */
+  (function(){
+    var cv=document.getElementById('luna-vectores'); if(!cv||!cv.getContext) return;
+    var ctx=cv.getContext('2d'), W,H,dpr, P=[], cx,cy,R, mx=-999,my=-999, armar=false, t0=0, sem=5;
+    var consulta=null, proxima=0;
+    var GLIFOS=['§','¶','Art.','Par.','Ac.','N°','CSU','{ }'];
+    function az(){ sem=(sem*9301+49297)%233280; return sem/233280; }
+    // cráteres como direcciones sobre la esfera: [x,y,z,radio angular (coseno)]
+    var crateres=[[.35,-.2,.91,.975],[-.45,.35,.82,.985],[.1,.6,.79,.99],[-.2,-.55,.81,.988],[.6,.35,.72,.992],[-.7,-.1,.7,.99],[.15,-.1,-.98,.97],[-.5,.4,-.76,.98]];
+    crateres.forEach(function(c){ var n=Math.hypot(c[0],c[1],c[2]); c[0]/=n;c[1]/=n;c[2]/=n; });
+    var L=[-.55,-.6,.58]; (function(){ var n=Math.hypot(L[0],L[1],L[2]); L=[L[0]/n,L[1]/n,L[2]/n]; })();
+    function construir(){
+      dpr=Math.min(window.devicePixelRatio||1,2); W=cv.clientWidth; H=cv.clientHeight; if(!W||!H) return;
+      cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+      R=Math.min(W*.33,H*.44,250); cx=W/2; cy=H*.58; sem=5; P=[];
+      var n=W<600?1500:3000, intentos=0;
+      while(P.length<n && intentos<n*10){ intentos++;
+        // punto uniforme en la esfera
+        var z=az()*2-1, a=az()*Math.PI*2, r=Math.sqrt(1-z*z), x=r*Math.cos(a), y=r*Math.sin(a);
+        var hueco=false; crateres.forEach(function(c){ if(x*c[0]+y*c[1]+z*c[2]>c[3]) hueco=true; });
+        if(hueco && az()<.75) continue;
+        var tono=az(), col= tono<.86?'239,234,247': tono<.94?'92,225,230':'255,79,184';
+        P.push({ux:x,uy:y,uz:z, x:az()*W, y:az()*H*.85, vx:0,vy:0, s:.7+az()*1.1, c:col, f:az()*6.28,
+                 g: az()<.09? GLIFOS[Math.floor(az()*GLIFOS.length)] : null, brillo:0, sx:0, sy:0, vis:0});
+      }
+    }
+    function lanzarConsulta(t){
+      // elegir un punto de la cara visible como destino de la consulta
+      var cand=P.filter(function(p){ return p.vis>.75; }); if(!cand.length) return;
+      var d=cand[Math.floor(Math.random()*cand.length)];
+      var vecinos=P.filter(function(p){ return p!==d && p.ux*d.ux+p.uy*d.uy+p.uz*d.uz>.988; }).slice(0,14);
+      consulta={d:d, v:vecinos, t:t};
+    }
+    function cuadro(t){
+      ctx.clearRect(0,0,W,H);
+      var k=armar? Math.min((t-t0)/2200,1) : 0, e=1-Math.pow(1-k,3);
+      var th=t*.00011, ct=Math.cos(th), st=Math.sin(th);
+      ctx.globalCompositeOperation='lighter';
+      ctx.font='600 10px "Chakra Petch", monospace';
+      for(var i=0;i<P.length;i++){ var p=P[i];
+        // rotación en Y + leve inclinación
+        var x=p.ux*ct+p.uz*st, z=-p.ux*st+p.uz*ct, y=p.uy;
+        var y2=y*.97-z*.24, z2=y*.24+z*.97;
+        var esc=1/(1-z2*.12);
+        p.sx=cx+x*R*esc; p.sy=cy+y2*R*esc; p.vis=(z2+1)/2;
+        var luz=Math.max(0,x*L[0]+y2*L[1]+z2*L[2]);
+        var gx=armar? p.sx : p.x, gy=armar? p.sy : p.y;
+        if(!armar){ gx+=Math.sin(t*.0009+p.f)*6; gy+=Math.cos(t*.0008+p.f)*6; }
+        p.vx+=(gx-p.x)*.05*(.25+e); p.vy+=(gy-p.y)*.05*(.25+e);
+        var dx=p.x-mx, dy=p.y-my, d2=dx*dx+dy*dy;
+        if(d2<6400){ var fz=(6400-d2)/6400*2.6, dd=Math.sqrt(d2)||1; p.vx+=dx/dd*fz; p.vy+=dy/dd*fz; }
+        p.vx*=.8; p.vy*=.8; p.x+=p.vx; p.y+=p.vy;
+        var alfa=armar? (.08+.92*p.vis*p.vis)*(.25+.85*luz) : .55;
+        if(p.brillo>0){ p.brillo-=.012; }
+        if(p.g && e<.7){
+          ctx.fillStyle='rgba(92,225,230,'+(.75*(1-e/.7))+')'; ctx.fillText(p.g,p.x,p.y);
+        } else {
+          var b=p.brillo>0? p.brillo:0;
+          ctx.fillStyle= b? 'rgba(245,232,41,'+Math.min(1,alfa+b)+')' : 'rgba('+p.c+','+alfa+')';
+          ctx.beginPath(); ctx.arc(p.x,p.y,p.s*esc*(1+b*1.6),0,6.283); ctx.fill();
+        }
+      }
+      // consulta: rayo desde abajo hasta el punto, y conexiones con los vecinos
+      if(armar && e>=1 && !quieto){
+        if(!consulta && t>proxima) lanzarConsulta(t);
+        if(consulta){
+          var dt=t-consulta.t, d=consulta.d, ox=cx, oy=H+10;
+          var ida=Math.min(dt/450,1), px=ox+(d.x-ox)*ida, py=oy+(d.y-oy)*ida;
+          var vida= dt<1400? 1 : Math.max(0,1-(dt-1400)/700);
+          ctx.strokeStyle='rgba(92,225,230,'+(.8*vida)+')'; ctx.lineWidth=1.6;
+          ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(px,py); ctx.stroke();
+          if(ida>=1){
+            consulta.v.forEach(function(v){ v.brillo=Math.max(v.brillo,.9*vida); });
+            d.brillo=1*vida;
+            ctx.strokeStyle='rgba(245,232,41,'+(.45*vida)+')'; ctx.lineWidth=.8; ctx.beginPath();
+            consulta.v.forEach(function(v){ ctx.moveTo(d.x,d.y); ctx.lineTo(v.x,v.y); }); ctx.stroke();
+            ctx.globalCompositeOperation='source-over';
+            ctx.fillStyle='rgba(245,232,41,'+vida+')'; ctx.font='700 11px "Chakra Petch", sans-serif';
+            ctx.fillText('top-k = '+consulta.v.length, d.x+12, d.y-10);
+            ctx.globalCompositeOperation='lighter';
+          }
+          if(dt>2100){ consulta=null; proxima=t+1600; }
+        }
+      }
+      ctx.globalCompositeOperation='source-over';
+    }
+    function bucle(t){ cuadro(t); requestAnimationFrame(bucle); }
+    construir();
+    if(quieto){ armar=true; t0=-1e9; cuadro(0); P.forEach(function(p){p.x=p.sx;p.y=p.sy;}); cuadro(0); return; }
+    cv.addEventListener('mousemove',function(ev){ var b=cv.getBoundingClientRect(); mx=ev.clientX-b.left; my=ev.clientY-b.top; });
+    cv.addEventListener('mouseleave',function(){ mx=my=-999; });
+    cv.addEventListener('touchmove',function(ev){ var b=cv.getBoundingClientRect(), tt=ev.touches[0]; mx=tt.clientX-b.left; my=tt.clientY-b.top; },{passive:true});
+    cv.addEventListener('touchend',function(){ mx=my=-999; });
+    new IntersectionObserver(function(es){ if(es[0].isIntersecting && !armar){ armar=true; t0=performance.now(); proxima=t0+2800; } },{threshold:.35}).observe(cv);
+    var rt; addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(construir,150); });
+    requestAnimationFrame(bucle);
+  })();
 
   /* Revelar escenas al entrar */
   var obs = 'IntersectionObserver' in window ? new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visto'); obs.unobserve(e.target); } }); },{threshold:.15}) : null;

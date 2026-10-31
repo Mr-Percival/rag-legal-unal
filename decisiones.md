@@ -36,3 +36,16 @@
 - **Para actualizarla:** se edita `docs/index.html` (agregar un `<li>` arriba en Novedades, activar el enlace de la reunión, etc.) y se hace push a `main`. GitHub Pages la publica sola.
 - **Disponibilidad:** el When2meet https://www.when2meet.com/?39606729-rn6Ir (del 3 al 6 de noviembre, de 8:00 a 21:00, hora de Bogotá) reemplaza la votación por WhatsApp.
 - **Roles:** no son fijos. El semillero es formativo, así que todos rotan por datos, búsqueda, modelo y evaluación para aprender el RAG completo.
+
+## 2026-10-31 · Semanas, luna de vectores y revisión del agente estudiante
+
+- **Contenido semanal en `docs/datos.json`** (semanas, novedades y datos de la reunión). La página lo lee al cargar y, para actualizarla, no hay que tocar el HTML. El enlace de la reunión va por WhatsApp, no en la página (lo decidió Nicolás).
+- **Luna final:** es una esfera 3D de partículas que representa el espacio de embeddings. Cada tanto dispara una consulta que enciende su top-k. Reemplazó a unas siluetas de personas que se veían genéricas.
+- **Cursor:** cinta arcoíris con estelas de aberración cromática y onda al hacer clic. Se quitaron los cuadrados.
+- **Agente estudiante (31-10). Se aplicó:**
+  - El When2meet pasa a ser el paso 1 de la tarea y el botón de la portada dice "3 pasos, unos 15 minutos".
+  - Ahora se dice cómo se anuncia el horario.
+  - Las dudas van por el grupo de WhatsApp.
+  - El video de IBM sale de los niveles opcionales.
+  - Ajustes en celular: terminal, sello, novedades y rombos de las semanas. Se agregó un favicon.
+- **Pendiente de Nicolás:** la fecha límite para marcar el When2meet y dejar la pregunta, y cuánto tiempo semanal va a pedir el proyecto.
